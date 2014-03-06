@@ -1,6 +1,6 @@
 Notes on arduino code
 
-3/6/14
+3/6/14 Kyle_9DOFchip_A2610
 
 Output of Razor_AHRS_Kyle
 
