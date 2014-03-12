@@ -390,8 +390,8 @@ void read_sensors() {
   Read_Accel(); // Read accelerometer
   Read_Magn(); // Read magnetometer
   A2610_read_sensor(); //Read 2610 Sensor
-//  Tracker2D_mousedata_Transform(); //translate and integrate mouse x and y
-//  Tracker2D_xy_Transform();
+  Tracker2D_mousedata_Transform(); //translate and integrate mouse x and y
+  Tracker2D_xy_Transform();
 //  delay(100);
 }
 
@@ -651,9 +651,9 @@ void loop()
 //Added by Kyle 3/6/14
       if (output_stream_on || output_single_on) output_timestamp();
 //Taken out for 2D System 3/7/14
-      if (output_stream_on || output_single_on) A2610_output();
+//      if (output_stream_on || output_single_on) A2610_output();
 //End of Addition 3/6/14
-//      if (output_stream_on || output_single_on) Tracker2D_output();
+      if (output_stream_on || output_single_on) Tracker2D_output();
       if (output_stream_on || output_single_on) output_angles();    
     }
     else  // Output sensor values
