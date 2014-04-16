@@ -15,6 +15,7 @@ float accel[3];
 float magnet[3];
 float gyro[3];
 int x,y,x_convert,y_convert;
+float time;
 
 void setup() {
 // Initialization functions
@@ -40,9 +41,21 @@ reset_Fusion();
 }
 
 void loop() {
+time = millis();
 read_accel();
 read_gyro();
 read_magnet();
+read_lasermouse();
+Serial.print("x= ");
+Serial.print(x_convert);
+Serial.print(", y= ");
+Serial.println(y_convert);
+// Serial.println(magnet[0]);
+// Serial.println(gyro[0]);
+// Serial.println(accel[0]);
+ delay(10);
+ Serial.print(time);
+
 //Compensate sensor errors
 
 //Calculate magnetic heading
@@ -55,18 +68,5 @@ read_magnet();
 
 //Euler Angles
 
-read_lasermouse();
-Serial.print("x= ");
-Serial.print(x_convert);
-Serial.print(", y= ");
-Serial.println(y_convert);
-// Serial.println(magnet[0]);
-// Serial.println(gyro[0]);
-// Serial.println(accel[0]);
- delay(50);
-
-
-//read_orient_sensors();
-//read_displacement_sensor();
 //output_Print();
 }
