@@ -165,7 +165,10 @@ void performStartup(void){
   // change the reserved bytes (like by writing 0x00...) it would not work.
   byte laser_ctrl0 = adns_read_reg(REG_LASER_CTRL0);
   adns_write_reg(REG_LASER_CTRL0, laser_ctrl0 & 0xf0 );
-  
+//  enable CW mode *will reset if read motion register
+//  adns_write_reg(REG_LASER_CTRL0, laser_ctrl0 & B10000100 );
+
+
   delay(1);
 
   Serial.println("Optical Chip Initialized");
@@ -173,7 +176,10 @@ void performStartup(void){
 
 void UpdatePointer(void){
   if(initComplete==9){
-
+//    digitalWrite(ncs,LOW);
+//    adns_write_reg(REG_LASER_CTRL0, laser_ctrl0 & f0);
+//    digitalWrite(ncs,HIGH);
+// turn off laser NEN
     digitalWrite(ncs,LOW);
     xydat[0] = (int)adns_read_reg(REG_Delta_X_L);
     xydat[1] = (int)adns_read_reg(REG_Delta_Y_L);
@@ -248,3 +254,20 @@ void output_mouse(void)
 //    
 //  }
 
+void laser_off(void)
+{
+  digitalWrite(ncs,LOW);
+  byte laser_ctrl0 = adns_read_reg(REG_LASER_CTRL0);
+  adns_write_reg(REG_LASER_CTRL0, laser_ctrl0 | 0x01);
+  digitalWrite(ncs,HIGH);
+}
+
+void laser_on(void)
+{ 
+  digitalWrite(ncs,LOW);
+  byte laser_ctrl0 = adns_read_reg(REG_LASER_CTRL0);
+  adns_write_reg(REG_LASER_CTRL0, laser_ctrl0 & 0xf0);
+  digitalWrite(ncs,HIGH);
+}
+  
+  

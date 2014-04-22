@@ -385,11 +385,12 @@ int num_accel_errors = 0;
 int num_magn_errors = 0;
 int num_gyro_errors = 0;
 
+byte laseroff = 0;
 void read_sensors() {
   Read_Gyro(); // Read gyroscope
   Read_Accel(); // Read accelerometer
   Read_Magn(); // Read magnetometer
-  UpdatePointer();
+  if (laseroff == 0) UpdatePointer();
 }
 
 // Read every sensor and record a time stamp
@@ -587,6 +588,16 @@ void loop()
         {
           reset_calibration_session_flag = true;
           turn_output_stream_on();
+        }
+        else if (output_param == '2') // Turn off laser
+        {
+          laser_off();
+          laseroff = 1;
+        }
+        else if (output_param == '3') // Turn on laser
+        {
+          laser_on();
+          laseroff = 0;
         }
         else if (output_param == 'e') // _e_rror output settings
         {
