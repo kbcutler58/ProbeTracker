@@ -510,11 +510,7 @@ void setup()
   reset_sensor_fusion();
 
   // Init output
-#if (OUTPUT__HAS_RN_BLUETOOTH == true) || (OUTPUT__STARTUP_STREAM_ON == false)
-  turn_output_stream_off();
-#else
   turn_output_stream_on();
-#endif
 }
 
 // Main loop

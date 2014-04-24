@@ -1,11 +1,48 @@
-void reset_Fusion()
-{
+
+
+void reset_fusion() {
+  float temp1[3];
+  float temp2[3];
+  float xAxis[] = {1.0f, 0.0f, 0.0f};
+
+  read_accel();
+  read_gyro();
+  read_magnet();
+  
+  pitch = -atan2(accel[0], sqrt(accel[1] * accel[1] + accel[2] * accel[2]));
+	
+  Vector_Cross_Product(temp1, accel, xAxis);
+  Vector_Cross_Product(temp2, xAxis, temp1);
+  roll = atan2(temp2[1], temp2[2]);
+  
+  // GET YAW
+  compass_heading();
+  yaw = mag_heading;
+  
+  // Init rotation matrix
+  rotation_matrix_Init(DCM_Matrix, yaw, pitch, roll);
 }
 
-Initalize Rotation Matrix
+void compensate_errors() {
+
+  // Scale accelerometer data
+  accel[0] = (accel[0] - accel_x_off) * accel_x_scale;
+  accel[1] = (accel[1] - accel_y_off) * accel_y_scale;
+  accel[2] = (accel[2] - accel_z_off) * accel_z_scale; 
+  // Scale gyroscope data
+  gyro[0] = -gyro_offset_x;
+  gyro[1] = -gyro_offset_y;
+  gyro[2] = -gyro_offset_z;
+    
+  // Scale compass data
+  magnet[0] = (magnet[0] - magnet_x_off) * magnet_x_scale;
+  magnet[1] = (magnet[1] - magnet_y_off) * magnet_y_scale;
+  magnet[2] = (magnet[2] - magnet_z_off) * magnet_z_scale;
+  
+}
 
 // Init rotation matrix using euler angles
-void Init_rotation_matrix(float m[3][3], float yaw, float pitch, float roll)
+void rotation_matrix_Init(float m[3][3], float yaw, float pitch, float roll)
 {
   float c1 = cos(roll);
   float s1 = sin(roll);
@@ -29,7 +66,7 @@ void Init_rotation_matrix(float m[3][3], float yaw, float pitch, float roll)
   m[2][2] = c1 * c2;
 }
 
-void Normalization(void)
+void normalize_values(void)
 {
   float error=0;
   float temporary[3][3];
@@ -55,7 +92,7 @@ void Normalization(void)
   Vector_Scale(&DCM_Matrix[2][0], &temporary[2][0], renorm);
 }
 
-void Drift_correction(void)
+void drift_correction(void)
 {
   float mag_heading_x;
   float mag_heading_y;
@@ -97,7 +134,7 @@ void Drift_correction(void)
   Vector_Add(Omega_I,Omega_I,Scaled_Omega_I);//adding integrator to the Omega_I
 }
 
-void Matrix_update(void)
+void matrix_update(void)
 {
   Gyro_Vector[0]=GYRO_SCALED_RAD(gyro[0]); //gyro x roll
   Gyro_Vector[1]=GYRO_SCALED_RAD(gyro[1]); //gyro y pitch
@@ -143,23 +180,90 @@ void Matrix_update(void)
   }
 }
 
-void Euler Angles()
+void convert_angles()
 {
   pitch = -asin(DCM_Matrix[2][0]);
   roll = atan(DCM_Matrix[2][1],DCM_Matrix[2][2]);
   yaw = atan2(DCM_Matrix[1][0],DCM_Matrix[0][0]);
 }
 
-Vector Dot Product
+float Vector_Dot_Product(const float v1[3], const float v2[3])
+{
+  float result = 0;
+  
+  for(int c = 0; c < 3; c++)
+  {
+    result += v1[c] * v2[c];
+  }
+  
+  return result; 
+}
 
-Vector Cross Product
+void Vector_Cross_Product(float out[3], const float v1[3], const float v2[3])
+{
+  out[0] = (v1[1] * v2[2]) - (v1[2] * v2[1]);
+  out[1] = (v1[2] * v2[0]) - (v1[0] * v2[2]);
+  out[2] = (v1[0] * v2[1]) - (v1[1] * v2[0]);
+}
 
-Vector Scale
+void Vector_Scale(float out[3], const float v[3], float scale)
+{
+  for(int c = 0; c < 3; c++)
+  {
+    out[c] = v[c] * scale; 
+  }
+}
 
-Vector Add
+void Vector_Add(float out[3], const float v1[3], const float v2[3])
+{
+  for(int c = 0; c < 3; c++)
+  {
+    out[c] = v1[c] + v2[c];
+  }
+}
 
-Matrix Multiply
+void Matrix_Multiply(const float a[3][3], const float b[3][3], float out[3][3])
+{
+  for(int x = 0; x < 3; x++)  // rows
+  {
+    for(int y = 0; y < 3; y++)  // columns
+    {
+      out[x][y] = a[x][0] * b[0][y] + a[x][1] * b[1][y] + a[x][2] * b[2][y];
+    }
+  }
+}
 
-Matrix Vector Multiply
+void Matrix_Vector_Multiply(const float a[3][3], const float b[3], float out[3])
+{
+  for(int x = 0; x < 3; x++)
+  {
+    out[x] = a[x][0] * b[0] + a[x][1] * b[1] + a[x][2] * b[2];
+  }
+}
+
+// Init rotation matrix using euler angles
+void init_rotation_matrix(float m[3][3], float yaw, float pitch, float roll)
+{
+  float c1 = cos(roll);
+  float s1 = sin(roll);
+  float c2 = cos(pitch);
+  float s2 = sin(pitch);
+  float c3 = cos(yaw);
+  float s3 = sin(yaw);
+
+  // Euler angles, right-handed, intrinsic, XYZ convention
+  // (which means: rotate around body axes Z, Y', X'') 
+  m[0][0] = c2 * c3;
+  m[0][1] = c3 * s1 * s2 - c1 * s3;
+  m[0][2] = s1 * s3 + c1 * c3 * s2;
+
+  m[1][0] = c2 * s3;
+  m[1][1] = c1 * c3 + s1 * s2 * s3;
+  m[1][2] = c1 * s2 * s3 - c3 * s1;
+
+  m[2][0] = -s2;
+  m[2][1] = c2 * s1;
+  m[2][2] = c1 * c2;
+}
 
 

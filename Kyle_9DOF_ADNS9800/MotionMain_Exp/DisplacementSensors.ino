@@ -145,4 +145,21 @@ byte read_Register(byte reg_addr)
   return data;
 }
 
+void laser_off(void)
+{
+  digitalWrite(ncs,LOW);
+  byte laser_ctrl0 = adns_read_reg(REG_LASER_CTRL0);
+  adns_write_reg(REG_LASER_CTRL0, laser_ctrl0 | 0x01);
+  digitalWrite(ncs,HIGH);
+}
+
+void laser_on(void)
+{ 
+  digitalWrite(ncs,LOW);
+  byte laser_ctrl0 = adns_read_reg(REG_LASER_CTRL0);
+  adns_write_reg(REG_LASER_CTRL0, laser_ctrl0 & 0xf0);
+  digitalWrite(ncs,HIGH);
+}
+  
+
 
