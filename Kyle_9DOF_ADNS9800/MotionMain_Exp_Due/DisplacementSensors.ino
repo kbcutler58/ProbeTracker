@@ -70,7 +70,7 @@ void lasermouse_Init()
   Serial.println(laser_ctrl0);
   write_Register(REG_LASER_CTRL0, laser_ctrl0 & 0xf0);
   delay(10);
-  //Serial.print("ADNS9800 Initialized");
+  Serial.print("ADNS9800 Initialized");
 }
 
 void read_lasermouse()
@@ -147,18 +147,18 @@ byte read_Register(byte reg_addr)
 
 void laser_off(void)
 {
-  digitalWrite(SS_PIN,LOW);
-  byte laser_ctrl0 = read_Register(REG_LASER_CTRL0);
-  write_Register(REG_LASER_CTRL0, laser_ctrl0 | 0x01);
-  digitalWrite(SS_PIN,HIGH);
+  digitalWrite(ncs,LOW);
+  byte laser_ctrl0 = adns_read_reg(REG_LASER_CTRL0);
+  adns_write_reg(REG_LASER_CTRL0, laser_ctrl0 | 0x01);
+  digitalWrite(ncs,HIGH);
 }
 
 void laser_on(void)
 { 
-  digitalWrite(SS_PIN,LOW);
-  byte laser_ctrl0 = read_Register(REG_LASER_CTRL0);
-  write_Register(REG_LASER_CTRL0, laser_ctrl0 & 0xf0);
-  digitalWrite(SS_PIN,HIGH);
+  digitalWrite(ncs,LOW);
+  byte laser_ctrl0 = adns_read_reg(REG_LASER_CTRL0);
+  adns_write_reg(REG_LASER_CTRL0, laser_ctrl0 & 0xf0);
+  digitalWrite(ncs,HIGH);
 }
   
 

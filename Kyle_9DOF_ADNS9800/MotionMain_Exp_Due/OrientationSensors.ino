@@ -86,7 +86,7 @@ void magnet_Init()
 void read_accel()
 {
   int i = 0;
-  uint8_t accelbuff[6]; // Read 6 bytes from accel
+  byte accelbuff[6]; // Read 6 bytes from accel
   
   Wire.beginTransmission(accel_address);
   Wire.write(0x32); // Address to start read
@@ -102,9 +102,9 @@ void read_accel()
   Wire.endTransmission();
   if (i==6) // If all bytes 
   {
-    accel[0] = (int16_t)(((uint16_t) accelbuff[3]) << 8) | accelbuff[2]; // X axis (internal Y)
-    accel[1] = (int16_t)(((uint16_t) accelbuff[1]) << 8) | accelbuff[0]; // Y axis (internal X) 
-    accel[2] = (int16_t)(((uint16_t) accelbuff[5]) << 8) | accelbuff[4]; // Z axis (internal Z)
+    accel[0] = (((int) accelbuff[3]) << 8) | accelbuff[2]; // X axis (internal Y)
+    accel[1] = (((int) accelbuff[1]) << 8) | accelbuff[0]; // Y axis (internal X) 
+    accel[2] = (((int) accelbuff[5]) << 8) | accelbuff[4]; // Z axis (internal Z)
   }
   else
   {
@@ -115,7 +115,7 @@ void read_accel()
 void read_gyro()
 {
   int i = 0;
-  uint8_t gyrobuff[6];
+  byte gyrobuff[6];
   
   Wire.beginTransmission(gyro_address);
   Wire.write(0x1D); // Address to start read
@@ -132,9 +132,9 @@ void read_gyro()
   
   if (i==6) // If all bytes in
   {
-    gyro[0] = -1*(int16_t)((((uint16_t) gyrobuff[2]) << 8) | gyrobuff[3]);  // X axis(internal -Y)
-    gyro[1] = -1*(int16_t)((((uint16_t) gyrobuff[0]) << 8) | gyrobuff[1]);  // Y axis(internal -X)
-    gyro[2] = -1*(int16_t)((((uint16_t) gyrobuff[4]) << 8) | gyrobuff[5]);  // Z axis(internal -Z)
+    gyro[0] = -1*((((int) gyrobuff[2]) << 8) | gyrobuff[3]);  // X axis(internal -Y)
+    gyro[1] = -1*((((int) gyrobuff[0]) << 8) | gyrobuff[1]);  // Y axis(internal -X)
+    gyro[2] = -1*((((int) gyrobuff[4]) << 8) | gyrobuff[5]);  // Z axis(internal -Z)
   }
   else
   {
@@ -145,7 +145,7 @@ void read_gyro()
 void read_magnet()
 {
   int i = 0;
-  uint8_t magnetbuff[6];
+  byte magnetbuff[6];
   
   Wire.beginTransmission(magnet_address);
   Wire.write(0x03);
@@ -162,9 +162,9 @@ void read_magnet()
   
   if (i==6)
   {
-    magnet[0] = (int16_t)((((uint16_t) magnetbuff[0]) << 8) | magnetbuff[1]);     // X axis (internal X)
-    magnet[1] = -1*(int16_t)((((uint16_t) magnetbuff[4]) << 8) | magnetbuff[5]); // Y axis (internal -Y)
-    magnet[2] = -1*(int16_t)((((uint16_t) magnetbuff[2]) << 8) | magnetbuff[3]); // Z Axis (internal -Z)
+    magnet[0] = ((((int) magnetbuff[0]) << 8) | magnetbuff[1]);     // X axis (internal X)
+    magnet[1] = -1*((((int) magnetbuff[4]) << 8) | magnetbuff[5]); // Y axis (internal -Y)
+    magnet[2] = -1*((((int) magnetbuff[2]) << 8) | magnetbuff[3]); // Z Axis (internal -Z)
   }
   else
   {
