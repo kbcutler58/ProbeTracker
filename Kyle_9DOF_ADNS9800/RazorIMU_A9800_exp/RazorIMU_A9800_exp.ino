@@ -3,16 +3,17 @@
 // Beckman Laser Institute: Diffuse Optical Spectroscopy Lab
 // Created by Kyle Cutler 04/03/14
 
-#include <Wire.h> //Orientation Comm Protocol
-#include <SPI.h> //Displacement Comm Protocol
+#include <Wire.h> // Orientation Comm Protocol
+#include <SPI.h> // Displacement Comm Protocol
 #include <avr/pgmspace.h>
 
-//definitions
-#define Output_Interval 25
-#define output_baud_rate 57600
+// Definitions
+#define Output_Interval 20 // Time between outputs in msec
+#define output_baud_rate 57600 // Serial baud rate
 
-#define gravity 256.0f
-#define kp_Rollpitch 0.02f
+#define gravity 256.0f // Constant float for gravity
+// DCM Constants
+#define kp_Rollpitch 0.02f 
 #define ki_Rollpitch 0.00002f
 #define kp_Yaw 1.2f
 #define ki_Yaw 0.00002f
@@ -58,26 +59,26 @@
 #define to_reg(x) (x * 0.01745329252)
 
 // Orientation Sensor variables
-float accel[3], accel_min[3], accel_max[3]; //accelerometer variables
-float magnet[3], magnet_min[3], magnet_max[3], magnet_temp[3]; //magnetometer variables
-float gyro[3], gyro_average[3]; //gyroscope variables
+float accel[3], accel_min[3], accel_max[3]; // accelerometer variables
+float magnet[3], magnet_min[3], magnet_max[3], magnet_temp[3]; // magnetometer variables
+float gyro[3], gyro_average[3]; // gyroscope variables
 int gyro_num_samples = 0;
 float yaw,pitch,roll; // Euler Angles
 
 // DCM Variables
-float mag_heading; //compass heading
-float accel_vector[3] = {0,0,0}; //accel data vector
-float gyro_vector[3] = {0,0,0};  //gyro data vector
-float omega_vector[3] = {0,0,0}; //corrected gyro vector
+float mag_heading; // compass heading
+float accel_vector[3] = {0,0,0}; // accel data vector
+float gyro_vector[3] = {0,0,0};  // gyro data vector
+float omega_vector[3] = {0,0,0}; // corrected gyro vector
 float omega_P[3] = {0,0,0};
 float omega_I[3] = {0,0,0};
 float omega[3] = {0,0,0};
-float errorRollPitch[3] = {0,0,0};
-float errorYaw[3] = {0,0,0};
-float DCM_Matrix[3][3],New_Matrix[3][3],Temp_Matrix[3][3];
+float errorRollPitch[3] = {0,0,0}; // error vector roll and pitch
+float errorYaw[3] = {0,0,0}; // error vector yaw
+float DCM_Matrix[3][3],New_Matrix[3][3],Temp_Matrix[3][3]; //Matrix for DCM, updated DCM, Temp DCM
 
-unsigned long timestamp; //timestamp for main loop
-unsigned long timestamp_old; //previous timestamp for main loop
+unsigned long timestamp; // timestamp for main loop
+unsigned long timestamp_old; // previous timestamp for main loop
 float int_dt;  // integration time
 
 // Displacement Sensor variables
@@ -107,28 +108,29 @@ delay(200);
 }
 
 void loop() {
-
-if((millis() - timestamp) >= Output_Interval)
-{
-  timestamp_old = timestamp;
-  timestamp = millis();
-  if (timestamp > timestamp_old)
-  int_dt = (float) (timestamp - timestamp_old) / 1000.0f;
-  else int_dt = 0;
-  
-  read_accel();
-  read_gyro();
-  read_magnet();
-  if (laseroff == 0) read_lasermouse();
-  
-  compensate_errors(); //scale and offset
-  compass_heading(); //get a magnetic heading
-  matrix_update(); // updates the DCM matrix
-  normalize_values(); // normalize DCM
-  drift_correction(); // check and correct for drift
-  convert_angles(); // from matrix to euler
-  output_print(); // print output data to serial
+  if((millis() - timestamp) >= Output_Interval)
+  {
+    timestamp_old = timestamp;
+    timestamp = millis();
+    if (timestamp > timestamp_old)
+    int_dt = (float) (timestamp - timestamp_old) / 1000.0f;
+    else int_dt = 0;
+    
+    read_accel();
+    read_gyro();
+    read_magnet();
+    if (laseroff == 0) read_lasermouse();
+    
+    compensate_errors(); //scale and offset
+    compass_heading(); //get a magnetic heading
+    matrix_update(); // updates the DCM matrix
+    normalize_values(); // normalize DCM
+    drift_correction(); // check and correct for drift
+    convert_angles(); // from matrix to euler
+    output_print(); // print output data to serial
 }
+
+
 }
 void output_print() {
   Serial.print(millis());
