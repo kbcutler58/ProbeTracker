@@ -85,6 +85,8 @@ int x,y,x_convert,y_convert; // raw and translated data
 float current_time; // timing for sensor
 byte laseroff = 0; // flag for turning off laser for measurements
 
+// Button control variable
+int button_value;
 
 void setup() {
 // Initialization functions
@@ -107,7 +109,12 @@ delay(200);
 }
 
 void loop() {
-
+if (Serial.available() >= 1) {
+  if (Serial.read() == 'r') {
+    reset_function();
+  }
+}
+  
 if((millis() - timestamp) >= Output_Interval)
 {
   timestamp_old = timestamp;
@@ -119,6 +126,7 @@ if((millis() - timestamp) >= Output_Interval)
   read_accel();
   read_gyro();
   read_magnet();
+  update_button();
   if (laseroff == 0) read_lasermouse();
   
   compensate_errors(); //scale and offset
@@ -142,6 +150,18 @@ void output_print() {
   Serial.print(to_deg(pitch));
   Serial.print(",");
   Serial.print(to_deg(roll));
+  Serial.print(",");
+  Serial.print(button_value);
   Serial.println(" ");
-  
+
 }
+
+void update_button() {
+  button_value=analogRead(0);
+}
+
+void reset_function() {
+  pinMode(7,OUTPUT);
+  digitalWrite(7,LOW);
+}  
+
