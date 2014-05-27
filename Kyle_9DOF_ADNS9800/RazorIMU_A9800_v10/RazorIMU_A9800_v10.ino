@@ -81,10 +81,11 @@ unsigned long timestamp_old; //previous timestamp for main loop
 float int_dt;  // integration time
 
 // Displacement Sensor variables
-int x,y,x_convert,y_convert; // raw and translated data
+int x,y,x_convert,y_convert,x_int,y_int; // raw and translated data
 float current_time; // timing for sensor
 byte laseroff = 0; // flag for turning off laser for measurements
 
+char OutputMode = 0; // flag for changing raw vs integrative output
 // Button control variable
 int button_value;
 
@@ -109,11 +110,6 @@ delay(200);
 }
 
 void loop() {
-if (Serial.available() >= 1) {
-  if (Serial.read() == 'r') {
-    reset_function();
-  }
-}
   
 if((millis() - timestamp) >= Output_Interval)
 {
@@ -137,13 +133,33 @@ if((millis() - timestamp) >= Output_Interval)
   convert_angles(); // from matrix to euler
   output_print(); // print output data to serial
 }
+
+if (Serial.available() >= 1) {
+  if (Serial.read() == 'r') {
+    reset_function();
+  }
+  if (Serial.read() == 'm') {
+    change_OutputMode();
+  }
+  if (Serial.read() == 'h') {
+    reset_Integrated();
+  }
+}
+
 }
 void output_print() {
   Serial.print(millis());
   Serial.print(",");
+  if (OutputMode == 'integrated') {
+    Serial.print(x_int);
+    Serial.print(",");
+    Serial.print(y_int);
+  }
+  else {
   Serial.print(x_convert);
   Serial.print(",");
   Serial.print(y_convert);
+  }
   Serial.print(",");
   Serial.print(to_deg(yaw));
   Serial.print(",");
@@ -165,3 +181,14 @@ void reset_function() {
   digitalWrite(7,LOW);
 }  
 
+void change_OutputMode() {
+  if (OutputMode == 'raw') { OutputMode = 'integrated'; }
+  if (OutputMode == 'integrated') { OutputMode = 'raw'; }  
+}
+
+
+void reset_Integrated() {
+  x_int = 0;
+  y_int = 0;
+}
+ 
