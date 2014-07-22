@@ -138,10 +138,10 @@ if (Serial.available() >= 1) {
   if (Serial.read() == 'r') {
     reset_function();
   }
-  if (Serial.read() == 'm') {
+  else if (Serial.read() == 'm') {
     change_OutputMode();
   }
-  if (Serial.read() == 'h') {
+  else if (Serial.read() == 'h') {
     reset_Integrated();
   }
 }
