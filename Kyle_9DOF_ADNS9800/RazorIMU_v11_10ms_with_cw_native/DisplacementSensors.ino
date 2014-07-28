@@ -67,7 +67,7 @@ void lasermouse_Init()
   upload_Firmware();
   delay(10);
   byte laser_ctrl0 = read_Register(REG_LASER_CTRL0);
-  Serial.println(laser_ctrl0);
+  SerialUSB.println(laser_ctrl0);
   write_Register(REG_LASER_CTRL0, laser_ctrl0 & 0xf0);
   delay(10);
   //Serial.print("ADNS9800 Initialized");
@@ -97,7 +97,7 @@ int lasermouse_dataconvert(int b)
 
 // Upload the firmware at boot
 void upload_Firmware(){
-  Serial.println("Uploading firmware...");
+  SerialUSB.println("Uploading firmware...");
   // set the configuration_IV register in 3k firmware mode
   write_Register(REG_Configuration_IV, 0x02); // bit 1 = 1 for 3k mode, other bits are reserved 
  

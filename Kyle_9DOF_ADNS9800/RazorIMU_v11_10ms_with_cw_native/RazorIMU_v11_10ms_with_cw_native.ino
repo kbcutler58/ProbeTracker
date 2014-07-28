@@ -118,13 +118,10 @@ void setup() {
 // Initialization functions
 SerialUSB.begin(output_baud_rate); //number doesn't actually matter here
 
-while (!Serial) ; //wait for SerialUSB port to open
+while (!SerialUSB) ; //wait for serial monitor to be opened
 
-
-analogWriteResolution(12);
+analogWriteResolution(12); //change write resolution for Soroush
 delay(50);
-
-SerialUSB.print("We're ready! Press a to start");
 
 // I2C Comm, Sensors: ADXL345, HMC5883L, ITG-3200, ADNS9800
 I2C_Init();
@@ -144,12 +141,14 @@ ADC->ADC_MR |= 0x80; // these lines set free running mode on adc 7 (pin A0)
 ADC->ADC_CR=2;
 ADC->ADC_CHER=0xC0; // this is (1<<7) | (1<<6) for adc 7 and adc 6  
 pinMode(MUX_EN,OUTPUT);
+
+SerialUSB.println("We're ready! Send an a to start"); //let user know
 }
 
 void loop() {
 
-if (start_flag==1) //wait to start the system until we send it an 'a'
-{
+if (start_flag==1){ //wait to start the system until we send it an 'a'
+
 if((millis() - timestamp) >= Output_Interval)
 {
   timestamp_old = timestamp;
@@ -193,8 +192,8 @@ if((millis() - timestamp) >= Output_Interval)
   output_print(); // print output data to SerialUSB
   
 }
-else {} //if not started, do nothing
-}
+else {} }//if not started, do nothing
+
 
 if (SerialUSB.available() >= 1) {
   if (SerialUSB.read() == 'a') {
