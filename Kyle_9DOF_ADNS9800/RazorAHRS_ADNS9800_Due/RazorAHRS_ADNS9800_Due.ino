@@ -172,7 +172,7 @@
 // Sensor data output interval in milliseconds
 // This may not work, if faster than 20ms (=50Hz)
 // Code is tuned for 20ms, so better leave it like that
-#define OUTPUT__DATA_INTERVAL 20  // in milliseconds
+#define OUTPUT__DATA_INTERVAL 20 // in milliseconds
 
 // Output mode definitions (do not change)
 #define OUTPUT__MODE_CALIBRATE_SENSORS 0 // Outputs sensor min/max values as text for manual calibration
@@ -634,12 +634,13 @@ void loop()
     // Update sensor readings
     read_sensors();
 
-    if (output_mode == OUTPUT__MODE_CALIBRATE_SENSORS)  // We're in calibration mode
-    {
-      check_reset_calibration_session();  // Check if this session needs a reset
-      if (output_stream_on || output_single_on) output_calibration(curr_calibration_sensor);
-    }
-    else if (output_mode == OUTPUT__MODE_ANGLES)  // Output angles
+//    if (output_mode == OUTPUT__MODE_CALIBRATE_SENSORS)  // We're in calibration mode
+//    {
+//      check_reset_calibration_session();  // Check if this session needs a reset
+//      if (output_stream_on || output_single_on) output_calibration(curr_calibration_sensor);
+//    }
+//    else
+    if (output_mode == OUTPUT__MODE_ANGLES)  // Output angles
     {
       // Apply sensor calibration
       compensate_sensor_errors();

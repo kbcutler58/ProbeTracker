@@ -24,7 +24,7 @@ Matt modified some variable names and addeded some comments
 #define gravity 256.0f
 #define kp_Rollpitch 0.02f
 #define ki_Rollpitch 0.00002f
-#define kp_Yaw 1.2f
+#define kp_Yaw 5.2f
 #define ki_Yaw 0.00002f
 
 // Calibration values
@@ -170,13 +170,13 @@ if((millis() - timestamp) >= Output_Interval)
   convert_angles(); // from matrix to euler
   
   //output data from optical signals
-  for (int i=0; i<num; i++) //read data and save to LD1 and LD2 variables
-  {
-  //while((ADC->ADC_ISR & 0x80)==0); // wait for conversion 1channel
-  while((ADC->ADC_ISR & 0xC0)!=0xC0); // 2channel
-  LD1[i]=ADC->ADC_CDR[A]; // read data
-  LD2[i]=ADC->ADC_CDR[B];
-  }
+//    for (int i=0; i<num; i++) //read data and save to LD1 and LD2 variables
+//    {
+//    //while((ADC->ADC_ISR & 0x80)==0); // wait for conversion 1channel
+//    while((ADC->ADC_ISR & 0xC0)!=0xC0); // 2channel
+//    LD1[i]=ADC->ADC_CDR[A]; // read data
+//    LD2[i]=ADC->ADC_CDR[B];
+//    }
   
   //turn of lasers (just in case)
   //DAC_mux(0,0,0)
@@ -235,10 +235,10 @@ void output_print() {
   Serial.print(button_value);
   Serial.print(",");
   Serial.print(squal);
-  Serial.print(",");
-  Serial.print(tStr1);
-  Serial.print(",");
-  Serial.print(tStr2);
+//  Serial.print(",");
+//  Serial.print(tStr1);
+//  Serial.print(",");
+//  Serial.print(tStr2);
   Serial.println(" ");
 
 }

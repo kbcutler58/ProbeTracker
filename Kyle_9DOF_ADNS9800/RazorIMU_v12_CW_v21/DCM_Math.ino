@@ -8,6 +8,7 @@ void reset_fusion() {
   read_accel();
   read_gyro();
   read_magnet();
+  timestamp = millis();
   
   pitch = -atan2(accel[0], sqrt(accel[1] * accel[1] + accel[2] * accel[2]));
 	
@@ -30,9 +31,9 @@ void compensate_errors() {
   accel[1] = (accel[1] - accel_y_off) * accel_y_scale;
   accel[2] = (accel[2] - accel_z_off) * accel_z_scale; 
   // Scale gyroscope data
-  gyro[0] = -gyro_offset_x;
-  gyro[1] = -gyro_offset_y;
-  gyro[2] = -gyro_offset_z;
+  gyro[0] -= -gyro_offset_x;
+  gyro[1] -= -gyro_offset_y;
+  gyro[2] -= -gyro_offset_z;
     
   // Scale compass data
   magnet[0] = (magnet[0] - magnet_x_off) * magnet_x_scale;

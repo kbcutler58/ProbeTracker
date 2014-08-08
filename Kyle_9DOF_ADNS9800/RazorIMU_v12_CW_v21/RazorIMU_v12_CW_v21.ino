@@ -159,7 +159,7 @@ if((millis() - timestamp) >= Output_Interval)
   timestamp_old = timestamp;
   timestamp = millis();
   if (timestamp > timestamp_old)
-  int_dt = (float) (timestamp - timestamp_old) / 1000.0f;
+    int_dt = (float) (timestamp - timestamp_old) / 1000.0f;
   else int_dt = 0;
   
   //turn on laser diodes
