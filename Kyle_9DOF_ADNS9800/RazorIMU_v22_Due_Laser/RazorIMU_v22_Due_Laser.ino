@@ -65,7 +65,7 @@ Code segmented for options of
 #define to_deg(x) (x * 57.2957795131)
 #define to_reg(x) (x * 0.01745329252)
 
-// Program Options
+// Program Options (Change to 0 to turn off)
 byte use_orientation = 1;
 byte use_displacement = 1;
 byte use_lasers = 1;
@@ -186,13 +186,15 @@ void loop() {
     t1=micros();
   }
   
+   update_button();
+    
   if (use_orientation == 1)
   {
   //get tracking stuff  
   read_accel();
   read_gyro();
   read_magnet();
-  update_button();
+
    
   //do tracking math
   compensate_errors(); //scale and offset
@@ -258,8 +260,9 @@ void output_print() {
   SerialUSB.print(",");
   SerialUSB.print(t2-t1);
   SerialUSB.print(",");
-  SerialUSB.println(tStr);
+  SerialUSB.print(tStr);
   }
+  SerialUSB.println(" ");
 }
 
 void update_button() {
