@@ -94,7 +94,7 @@ unsigned long timestamp_old; //previous timestamp for main loop
 float int_dt; // integration time
 
 // Displacement Sensor variables
-int x_convert_low,y_convert_low,x_convert_high,y_convert_high,x_int,y_int,squal; // raw and translated data
+int x_int,y_int,squal; // raw and translated data
 int x_real,y_real;
 //int x_low,x_high,y_low,y_high;
 float current_time; // timing for sensor
@@ -240,13 +240,6 @@ void output_print() {
   SerialUSB.print(",");
   if (use_displacement == 1)
   {
-//  SerialUSB.print(x_convert_low);
-//  SerialUSB.print(",");
-//  SerialUSB.print(x_convert_high);
-//  SerialUSB.print(",");
-//  SerialUSB.print(y_convert_low);
-//  SerialUSB.print(",");
-//  SerialUSB.print(y_convert_high);
 //  SerialUSB.print(",");
 //  SerialUSB.print(x_low);
 //  SerialUSB.print(",");

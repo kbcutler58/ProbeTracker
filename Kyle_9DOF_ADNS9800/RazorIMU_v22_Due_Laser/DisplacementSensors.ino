@@ -87,18 +87,22 @@ void read_lasermouse()
 //  Serial.println("Read Complete");
   x_low = lasermouse_dataconvert(x_low);
   y_low = lasermouse_dataconvert(y_low);
-  x_high = lasermouse_dataconvert(x_high);
-  y_high = lasermouse_dataconvert(y_high);
+//  x_high = lasermouse_dataconvert(x_high);
+//  y_high = lasermouse_dataconvert(y_high);
   x_real = (int16_t) (((uint16_t) x_high) << 8) | x_low;
   y_real = (int16_t) (((uint16_t) y_high) << 8) | y_low;
+//  x_real = lasermouse_dataconvert(x_real);
+//  y_real = lasermouse_dataconvert(y_real);
+
+
 //  x_int = x_int + x_convert;
 //  y_int = y_int + y_convert; 
 }
 
-int lasermouse_dataconvert(uint8_t b)
+int lasermouse_dataconvert(int b)
 {
-  if(b & 0x80) {
-    b = -1 * ((b ^ 0xff) +1);
+  if(b & 0x8000) {
+    b = -1 * ((b ^ 0xffff) +1);
   }
   return b;  
 }
