@@ -132,7 +132,7 @@ if (Serial.available() >= 1) {
   else {}
 }  
 
-if (start_flag==1) //wait to start the system until we send it an 'a'
+if (start_flag==0) //wait to start the system until we send it an 'a'
 {
   if((millis() - timestamp) >= Output_Interval)
   {

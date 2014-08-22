@@ -67,7 +67,7 @@ void lasermouse_Init()
   upload_Firmware();
   delay(10);
   byte laser_ctrl0 = read_Register(REG_LASER_CTRL0);
-  Serial.println(laser_ctrl0);
+  //Serial.println(laser_ctrl0);
   write_Register(REG_LASER_CTRL0, laser_ctrl0 & 0xf0);
   delay(10);
   //Serial.print("ADNS9800 Initialized");
