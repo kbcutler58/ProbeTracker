@@ -149,7 +149,7 @@ analogWriteResolution(12); //change write resolution for Soroush
 //Laser controller Variables
 ADC->ADC_MR |= 0x80; // these lines set free running mode on adc 7 (pin A0)
 ADC->ADC_CR=2;
-ADC->ADC_CHER=0x60; // this is (1<<7) | (1<<6) for adc 7 and adc 6  
+ADC->ADC_CHER=0x81; // this is (1<<7) | (1<<6) for adc 7 and adc 6  
 pinMode(MUX_EN,OUTPUT);
 }
 
@@ -219,9 +219,9 @@ void loop() {
     for (int i=0; i<num; i++) //read data and save to LD and LD2 variables
     {
     //while((ADC->ADC_ISR & 0x80)==0); // wait for conversion 1channel
-    while((ADC->ADC_ISR & 0x60)!=0x60); // 2channel
-    LD[i]=ADC->ADC_CDR[5]; // read data
-    LD[i+num]=ADC->ADC_CDR[6];
+    while((ADC->ADC_ISR & 0x81)!=0x81); // 2channel
+    LD[i]=ADC->ADC_CDR[0]; // read data
+    LD[i+num]=ADC->ADC_CDR[7];
     }
     
     //Convert LD and LD2 to strings (for speed - can't send array all at once)
