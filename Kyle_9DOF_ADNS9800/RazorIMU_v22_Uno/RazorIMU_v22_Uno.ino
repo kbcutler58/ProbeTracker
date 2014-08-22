@@ -85,7 +85,7 @@ unsigned long timestamp_old; //previous timestamp for main loop
 float int_dt; // integration time
 
 // Displacement Sensor variables
-int x,y,x_convert,y_convert,x_int,y_int,squal; // raw and translated data
+int x_low,x_high,y_low,y_high,x_int,y_int,squal; // raw and translated data
 float current_time; // timing for sensor
 byte laseroff = 0; // flag for turning off laser for measurements
 
@@ -168,9 +168,13 @@ if (start_flag==0) //wait to start the system until we send it an 'a'
 void output_print() {
   Serial.print(millis());
   Serial.print(",");
-  Serial.print(x_convert);
+  Serial.print(x_low);
   Serial.print(",");
-  Serial.print(y_convert);
+  Serial.print(x_high);
+  Serial.print(",");
+  Serial.print(y_low);
+  Serial.print(",");
+  Serial.print(y_high);
   Serial.print(",");
   Serial.print(to_deg(yaw));
   Serial.print(",");

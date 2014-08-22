@@ -76,15 +76,13 @@ void lasermouse_Init()
 void read_lasermouse()
 {
   digitalWrite(SS_PIN, LOW);
-  x = read_Register(0x03);
-  y = read_Register(0x05);
+  x_low = read_Register(0x03);
+  x_high = read_Register(0x04);
+  y_low = read_Register(0x05);
+  y_high = read_Register(0x06);
   squal = read_Register(0x07);
   digitalWrite(SS_PIN, HIGH);
 //  Serial.println("Read Complete");
-  x_convert = lasermouse_dataconvert(x);
-  y_convert = lasermouse_dataconvert(y);
-  x_int = x_int + x_convert;
-  y_int = y_int + y_convert; 
 }
 
 int lasermouse_dataconvert(int b)
