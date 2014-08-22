@@ -66,9 +66,9 @@ Code segmented for options of
 #define to_reg(x) (x * 0.01745329252)
 
 // Program Options (Change to 0 to turn off)
-byte use_orientation = 1;
+byte use_orientation = 0;
 byte use_displacement = 1;
-byte use_lasers = 1;
+byte use_lasers = 0;
 
 // Orientation Sensor variables
 float accel[3], accel_min[3], accel_max[3]; //accelerometer variables
@@ -94,7 +94,9 @@ unsigned long timestamp_old; //previous timestamp for main loop
 float int_dt; // integration time
 
 // Displacement Sensor variables
-int x,y,x_convert,y_convert,x_int,y_int,squal; // raw and translated data
+int x_convert_low,y_convert_low,x_convert_high,y_convert_high,x_int,y_int,squal; // raw and translated data
+int x_real,y_real;
+//int x_low,x_high,y_low,y_high;
 float current_time; // timing for sensor
 byte laseroff = 0; // flag for turning off laser for measurements
 
@@ -186,7 +188,7 @@ void loop() {
     t1=micros();
   }
   
-   update_button();
+//   update_button();
     
   if (use_orientation == 1)
   {
@@ -238,9 +240,21 @@ void output_print() {
   SerialUSB.print(",");
   if (use_displacement == 1)
   {
-  SerialUSB.print(x_convert);
+//  SerialUSB.print(x_convert_low);
+//  SerialUSB.print(",");
+//  SerialUSB.print(x_convert_high);
+//  SerialUSB.print(",");
+//  SerialUSB.print(y_convert_low);
+//  SerialUSB.print(",");
+//  SerialUSB.print(y_convert_high);
+//  SerialUSB.print(",");
+//  SerialUSB.print(x_low);
+//  SerialUSB.print(",");
+//  SerialUSB.print(x_high);
+//  SerialUSB.print(",");
+  SerialUSB.print(x_real);
   SerialUSB.print(",");
-  SerialUSB.print(y_convert);
+  SerialUSB.print(y_real);
   SerialUSB.print(",");
   }
   if (use_orientation == 1)
@@ -252,8 +266,8 @@ void output_print() {
   SerialUSB.print(to_deg(roll));
   SerialUSB.print(",");
   }
-  SerialUSB.print(button_value);
-  SerialUSB.print(",");
+//  SerialUSB.print(button_value);
+//  SerialUSB.print(",");
   if (use_lasers == 1)
   {
   SerialUSB.print(squal);
@@ -270,8 +284,8 @@ void update_button() {
 }
 
 void reset_function() {
-  pinMode(9,OUTPUT);
-  digitalWrite(9,LOW);
+  pinMode(7,OUTPUT);
+  digitalWrite(7,LOW);
 }
 
 
