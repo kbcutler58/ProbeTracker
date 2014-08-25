@@ -6,9 +6,9 @@
 
 Version 2.2 Made specifically for arduino due and CW laser imaging system (Soroush)
 Code segmented for options of 
-  Read and output orientation data (I2C)
-  Read and output displacement data (SPI)
-  Read and output laser data (Digital Control, Analog Read)  
+  Read orientation data (I2C)
+  Read displacement data (SPI)
+  Read laser data (Digital Control, Analog Read)  
 */
 
 #include <Wire.h> //Orientation Comm Protocol
@@ -66,16 +66,17 @@ Code segmented for options of
 #define to_reg(x) (x * 0.01745329252)
 
 // Program Options (Change to 0 to turn off)
-byte use_orientation = 0;
-byte use_displacement = 1;
-byte use_lasers = 0;
+byte use_orientation = 0; // Will turn on and off i2c and orientation measurements
+byte use_displacement = 1; // Will turn on and off SPI and displacement measurements
+byte use_lasers = 0; // Will turn on CW laser measurements 
+byte output_all = 0; // Will output all data even if off
 
 // Orientation Sensor variables
 float accel[3], accel_min[3], accel_max[3]; //accelerometer variables
 float magnet[3], magnet_min[3], magnet_max[3], magnet_temp[3]; //magnetometer variables
 float gyro[3], gyro_average[3]; //gyroscope variables
 int gyro_num_samples = 0;
-float yaw,pitch,roll; // Euler Angles
+float yaw,pitch,roll = 0; // Euler Angles
 
 // DCM Variables
 float mag_heading; //compass heading
@@ -186,6 +187,7 @@ void loop() {
   {
     DAC_mux(laser_selection,laser1_power,laser2_power);
     t1=micros();
+    delayMicroseconds(1300);
   }
   
 //   update_button();
@@ -228,10 +230,13 @@ void loop() {
     snprintf(tStr,501,"%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH%uH",LD[0],LD[1],LD[2],LD[3],LD[4],LD[5],LD[6],LD[7],LD[8],LD[9], LD[10], LD[11],LD[12],LD[13],LD[14],LD[15],LD[16],LD[17],LD[18],LD[19], LD[20], LD[21],LD[22],LD[23],LD[24],LD[25],LD[26],LD[27],LD[28],LD[29], LD[30], LD[31],LD[32],LD[33],LD[34],LD[35],LD[36],LD[37],LD[38],LD[39], LD[40], LD[41],LD[42],LD[43],LD[44],LD[45],LD[46],LD[47],LD[48],LD[49], LD[50], LD[51],LD[52],LD[53],LD[54],LD[55],LD[56],LD[57],LD[58],LD[59], LD[60], LD[61],LD[62],LD[63],LD[64],LD[65],LD[66],LD[67],LD[68],LD[69], LD[70], LD[71],LD[72],LD[73],LD[74],LD[75],LD[76],LD[77],LD[78],LD[79], LD[80], LD[81],LD[82],LD[83],LD[84],LD[85],LD[86],LD[87],LD[88],LD[89], LD[90], LD[91],LD[92],LD[93],LD[94],LD[95],LD[96],LD[97],LD[98],LD[99]);
   }
   //output results
-  output_print(); // print output data to SerialUSB
-  
-}
-else {} }//if not started, do nothing
+  if (output_all == 1) 
+  {
+    output_print_all(); // print all variables to output SerialUSB
+  }
+  else { output_print(); } // print output data to SerialUSB
+  }
+  else {} }//if not started, do nothing
 
 } //end of loop
 
@@ -240,11 +245,6 @@ void output_print() {
   SerialUSB.print(",");
   if (use_displacement == 1)
   {
-//  SerialUSB.print(",");
-//  SerialUSB.print(x_low);
-//  SerialUSB.print(",");
-//  SerialUSB.print(x_high);
-//  SerialUSB.print(",");
   SerialUSB.print(x_real);
   SerialUSB.print(",");
   SerialUSB.print(y_real);
@@ -269,6 +269,29 @@ void output_print() {
   SerialUSB.print(",");
   SerialUSB.print(tStr);
   }
+  SerialUSB.println(" ");
+}
+
+void output_print_all() {
+  SerialUSB.print(millis());
+  SerialUSB.print(",");
+  SerialUSB.print(x_real);
+  SerialUSB.print(",");
+  SerialUSB.print(y_real);
+  SerialUSB.print(",");
+  SerialUSB.print(to_deg(yaw));
+  SerialUSB.print(",");
+  SerialUSB.print(to_deg(pitch));
+  SerialUSB.print(",");
+  SerialUSB.print(to_deg(roll));
+  SerialUSB.print(",");
+  SerialUSB.print(button_value);
+  SerialUSB.print(",");
+  SerialUSB.print(squal);
+  SerialUSB.print(",");
+  SerialUSB.print(t2-t1);
+  SerialUSB.print(",");
+  SerialUSB.print(tStr);
   SerialUSB.println(" ");
 }
 
