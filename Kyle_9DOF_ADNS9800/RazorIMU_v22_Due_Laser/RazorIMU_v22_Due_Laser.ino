@@ -3,12 +3,14 @@
  Based off Razor AHRS Firmware v1.4.2
  Beckman Laser Institute: Diffuse Optical Spectroscopy Lab
  Created by Kyle Cutler 04/03/14
+ V2.2 8/25/14
 
 Version 2.2 Made specifically for arduino due and CW laser imaging system (Soroush)
 Code segmented for options of 
   Read orientation data (I2C)
   Read displacement data (SPI)
   Read laser data (Digital Control, Analog Read)  
+  Force print of all variables
 */
 
 #include <Wire.h> //Orientation Comm Protocol
