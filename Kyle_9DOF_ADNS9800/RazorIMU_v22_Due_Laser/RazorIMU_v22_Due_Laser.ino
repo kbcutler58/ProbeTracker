@@ -68,7 +68,7 @@ Code segmented for options of
 #define to_reg(x) (x * 0.01745329252)
 
 // Program Options (Change to 0 to turn off)
-byte use_orientation = 0; // Will turn on and off i2c and orientation measurements
+byte use_orientation = 1; // Will turn on and off i2c and orientation measurements
 byte use_displacement = 1; // Will turn on and off SPI and displacement measurements
 byte use_lasers = 0; // Will turn on CW laser measurements 
 byte output_all = 0; // Will output all data even if off
@@ -120,7 +120,7 @@ int MUX_EN=3;
 int  t1=0;
 int  t2=0;
 
-byte start_flag=0; //added by Matt
+byte start_flag=1; //added by Matt
 
 
 
