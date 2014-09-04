@@ -21,6 +21,26 @@ Code included to read lasers but commented out
 #define kp_Yaw 1.2f
 #define ki_Yaw 0.00002f
 
+//// Calibration values
+//#define accel_x_min ((float) -250)
+//#define accel_y_min ((float) -250)
+//#define accel_z_min ((float) -250)
+//#define accel_x_max ((float) 250)
+//#define accel_y_max ((float) 250)
+//#define accel_z_max ((float) 250)
+//
+//#define magnet_x_min ((float) -600)
+//#define magnet_y_min ((float) -600)
+//#define magnet_z_min ((float) -600)
+//#define magnet_x_max ((float) 600)
+//#define magnet_y_max ((float) 600)
+//#define magnet_z_max ((float) 600)
+//
+//#define gyro_offset_x ((float) 0.0)
+//#define gyro_offset_y ((float) 0.0)
+//#define gyro_offset_z ((float) 0.0)
+
+
 // Calibration values
 #define accel_x_min ((float) -250)
 #define accel_y_min ((float) -250)
@@ -61,6 +81,8 @@ Code included to read lasers but commented out
 #define to_deg(x) (x * 57.2957795131)
 #define to_reg(x) (x * 0.01745329252)
 
+byte use_calibration = 1;
+
 // Orientation Sensor variables
 float accel[3], accel_min[3], accel_max[3]; //accelerometer variables
 float magnet[3], magnet_min[3], magnet_max[3], magnet_temp[3]; //magnetometer variables
@@ -83,6 +105,9 @@ float DCM_Matrix[3][3],New_Matrix[3][3],Temp_Matrix[3][3];
 unsigned long timestamp; //timestamp for main loop
 unsigned long timestamp_old; //previous timestamp for main loop
 float int_dt; // integration time
+
+// Orientation Calibration Variables
+int curr_calibration_sensor = 0;
 
 // Displacement Sensor variables
 int x_low,x_high,y_low,y_high,x_int,y_int,squal; // raw and translated data
@@ -148,7 +173,14 @@ if (start_flag==0) //wait to start the system until we send it an 'a'
     read_magnet();
     update_button();
     if (laseroff == 0) read_lasermouse();
-    
+    if (use_calibration == 1)
+   {
+     for (int i = 0; i < 3; i++) {
+       output_calibration(curr_calibration_sensor);
+       curr_calibration_sensor++;
+     }
+     curr_calibration_sensor = 0;
+   } 
     //do tracking math
     compensate_errors(); //scale and offset
     compass_heading(); //get a magnetic heading
