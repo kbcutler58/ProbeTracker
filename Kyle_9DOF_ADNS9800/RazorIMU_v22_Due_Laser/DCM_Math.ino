@@ -230,5 +230,53 @@ void Matrix_Vector_Multiply(const float a[3][3], const float b[3], float out[3])
   }
 }
 
+void output_calibration(int calibration_sensor)
+{
+  if (calibration_sensor == 0)  // Accelerometer
+  {
+    // Output MIN/MAX values
+    SerialUSB.print("accel x,y,z (min/max) = ");
+    for (int i = 0; i < 3; i++) {
+      if (accel[i] < accel_min[i]) accel_min[i] = accel[i];
+      if (accel[i] > accel_max[i]) accel_max[i] = accel[i];
+      SerialUSB.print(accel_min[i]);
+      SerialUSB.print("/");
+      SerialUSB.print(accel_max[i]);
+      if (i < 2) SerialUSB.print("  ");
+      else SerialUSB.println();
+    }
+  }
+  else if (calibration_sensor == 1)  // Magnetometer
+  {
+    // Output MIN/MAX values
+    SerialUSB.print("magn x,y,z (min/max) = ");
+    for (int i = 0; i < 3; i++) {
+      if (magnet[i] < magnet_min[i]) magnet_min[i] = magnet[i];
+      if (magnet[i] > magnet_max[i]) magnet_max[i] = magnet[i];
+      SerialUSB.print(magnet_min[i]);
+      SerialUSB.print("/");
+      SerialUSB.print(magnet_max[i]);
+      if (i < 2) SerialUSB.print("  ");
+      else SerialUSB.println();
+    }
+  }
+  else if (calibration_sensor == 2)  // Gyroscope
+  {
+    // Average gyro values
+    for (int i = 0; i < 3; i++)
+      gyro_average[i] += gyro[i];
+    gyro_num_samples++;
+      
+    // Output current and averaged gyroscope values
+    SerialUSB.print("gyro x,y,z (current/average) = ");
+    for (int i = 0; i < 3; i++) {
+      SerialUSB.print(gyro[i]);
+      SerialUSB.print("/");
+      SerialUSB.print(gyro_average[i] / (float) gyro_num_samples);
+      if (i < 2) SerialUSB.print("  ");
+      else SerialUSB.println();
+    }
+  }
+}
 
 

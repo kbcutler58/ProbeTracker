@@ -27,24 +27,44 @@ Code segmented for options of
 #define kp_Yaw 1.2f
 #define ki_Yaw 0.00002f
 
+//// Calibration values
+//#define accel_x_min ((float) -250)
+//#define accel_y_min ((float) -250)
+//#define accel_z_min ((float) -250)
+//#define accel_x_max ((float) 250)
+//#define accel_y_max ((float) 250)
+//#define accel_z_max ((float) 250)
+//
+//#define magnet_x_min ((float) -600)
+//#define magnet_y_min ((float) -600)
+//#define magnet_z_min ((float) -600)
+//#define magnet_x_max ((float) 600)
+//#define magnet_y_max ((float) 600)
+//#define magnet_z_max ((float) 600)
+//
+//#define gyro_offset_x ((float) 0.0)
+//#define gyro_offset_y ((float) 0.0)
+//#define gyro_offset_z ((float) 0.0)
+
+
 // Calibration values
-#define accel_x_min ((float) -250)
-#define accel_y_min ((float) -250)
-#define accel_z_min ((float) -250)
-#define accel_x_max ((float) 250)
-#define accel_y_max ((float) 250)
-#define accel_z_max ((float) 250)
+#define accel_x_min ((float) -512)
+#define accel_y_min ((float) -512)
+#define accel_z_min ((float) -512)
+#define accel_x_max ((float) 511)
+#define accel_y_max ((float) 365)
+#define accel_z_max ((float) 511)
 
-#define magnet_x_min ((float) -600)
-#define magnet_y_min ((float) -600)
-#define magnet_z_min ((float) -600)
-#define magnet_x_max ((float) 600)
-#define magnet_y_max ((float) 600)
-#define magnet_z_max ((float) 600)
+#define magnet_x_min ((float) -1393)
+#define magnet_y_min ((float) -1308)
+#define magnet_z_min ((float) -1160)
+#define magnet_x_max ((float) 1615)
+#define magnet_y_max ((float) 1643)
+#define magnet_z_max ((float) 4096)
 
-#define gyro_offset_x ((float) 0.0)
-#define gyro_offset_y ((float) 0.0)
-#define gyro_offset_z ((float) 0.0)
+#define gyro_offset_x ((float) 0)
+#define gyro_offset_y ((float) 0)
+#define gyro_offset_z ((float) 0)
 
 // Offset and scale calculations (for calibration)
 #define accel_x_off ((accel_x_min + accel_x_max) / 2.0f)
@@ -73,12 +93,15 @@ byte use_displacement = 1; // Will turn on and off SPI and displacement measurem
 byte use_lasers = 0; // Will turn on CW laser measurements 
 byte output_all = 0; // Will output all data even if off
 
+byte use_calibration = 1;
+
 // Orientation Sensor variables
 float accel[3], accel_min[3], accel_max[3]; //accelerometer variables
 float magnet[3], magnet_min[3], magnet_max[3], magnet_temp[3]; //magnetometer variables
 float gyro[3], gyro_average[3]; //gyroscope variables
 int gyro_num_samples = 0;
 float yaw,pitch,roll = 0; // Euler Angles
+int curr_calibration_sensor = 0;
 
 // DCM Variables
 float mag_heading; //compass heading
@@ -183,7 +206,7 @@ void loop() {
       int_dt = (float) (timestamp - timestamp_old) / 1000.0f;
     }
     else { int_dt = 0;}
-  
+
     //turn on laser diodes
   if (use_lasers == 1) 
   {
@@ -201,6 +224,18 @@ void loop() {
   read_gyro();
   read_magnet();
 
+
+  if (use_calibration == 1)
+   {
+     read_accel();
+     read_gyro();
+     read_magnet();
+     for (int i = 0; i < 3; i++) {
+       output_calibration(curr_calibration_sensor);
+       curr_calibration_sensor++;
+     }
+     curr_calibration_sensor = 0;
+   }
    
   //do tracking math
   compensate_errors(); //scale and offset

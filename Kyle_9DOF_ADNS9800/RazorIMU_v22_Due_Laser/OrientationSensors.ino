@@ -108,7 +108,7 @@ void read_accel()
   }
   else
   {
-    Serial.println("Error reading accel");
+    SerialUSB.println("Error reading accel");
   }
 }
 
