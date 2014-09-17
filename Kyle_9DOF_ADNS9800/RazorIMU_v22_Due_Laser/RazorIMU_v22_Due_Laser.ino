@@ -223,8 +223,9 @@ void loop() {
         if (use_lasers == 1)
         {
           DAC_mux(laser_selection, laser1_power, laser2_power);
-          t1 = micros();
           delayMicroseconds(1300);
+          t1 = micros();
+          if ((use_orientation = 0) && (use_displacement==0)) 
         }
 
         //   update_button();
@@ -304,8 +305,6 @@ void output_print() {
     SerialUSB.print(",");
     SerialUSB.print(y_real);
     SerialUSB.print(",");
-    SerialUSB.print(squal);
-    SerialUSB.print(",");
   }
   if (use_orientation == 1)
   {
@@ -316,6 +315,11 @@ void output_print() {
     SerialUSB.print(to_deg(roll));
     SerialUSB.print(",");
     
+  }
+  if (use_displacement ==1)
+  {  
+    SerialUSB.print(squal);
+    SerialUSB.print(",");
   }
   //  SerialUSB.print(button_value);
   //  SerialUSB.print(",");
@@ -342,8 +346,6 @@ void output_print_all() {
   SerialUSB.print(",");
   SerialUSB.print(to_deg(roll));
   SerialUSB.print(",");
-//  SerialUSB.print(button_value);
-//  SerialUSB.print(",");
   SerialUSB.print(squal);
   SerialUSB.print(",");
   SerialUSB.print(t2 - t1);
