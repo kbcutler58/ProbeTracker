@@ -198,7 +198,6 @@ void loop() {
   read_gyro();
   read_magnet();
 
-   
   //do tracking math
   compensate_errors(); //scale and offset
   compass_heading(); //get a magnetic heading
