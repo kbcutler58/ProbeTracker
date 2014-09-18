@@ -95,8 +95,8 @@ byte output_all = 1; // Will output all data even if off
 
 byte use_calibration = 0;
 
-byte use_counter = 1;
-int counter = 10;
+byte use_counter = 0;
+int counter = 100;
 
 // Orientation Sensor variables
 float accel[3], accel_min[3], accel_max[3]; //accelerometer variables
@@ -146,7 +146,7 @@ int MUX_EN = 3;
 int  t1 = 0;
 int  t2 = 0;
 
-byte start_flag = 0; //added by Matt
+byte start_flag = 1; //added by Matt
 
 
 
