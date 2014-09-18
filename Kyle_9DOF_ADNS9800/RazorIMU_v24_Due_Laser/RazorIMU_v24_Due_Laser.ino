@@ -138,7 +138,7 @@ int laser1_power = 1500;
 int laser2_power = 1900;
 int num = 100;
 int laser_selection = 2; //0 1 2 or 3, see DAC_mux
-int LD[200] = {}; //variable to store data at first frequency
+int LD1[200] = {}; //variable to store data at first frequency
 char tStr[1010]; //string to output data at first frequency
 int A = 6; //first pin for choosing which diode to send RF modulation to
 int B = 7;
@@ -223,10 +223,10 @@ void loop() {
         if (use_lasers == 1)
         {
           DAC_mux(laser_selection, laser1_power, laser2_power);
-          delayMicroseconds(1300);
           t1 = micros();
-          if ((use_orientation = 0) && (use_displacement == 0))
-          }
+          if ((use_orientation == 0) && (use_displacement == 0)) delayMicroseconds(1300);
+          //         if ((use_orientation = 0) && (use_displacement == 0))
+        }
 
         //   update_button();
 
@@ -301,7 +301,7 @@ void loop() {
         }
         if (use_counter == 1) counter--;
       }
-      else {}
+      else { digitalWrite(MUX_EN, HIGH ); }
     }
     else {}
   }//if not started, do nothing
