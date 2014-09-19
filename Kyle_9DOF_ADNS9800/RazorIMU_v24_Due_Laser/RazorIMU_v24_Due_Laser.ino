@@ -88,8 +88,8 @@ Code segmented for options of
 #define to_reg(x) (x * 0.01745329252)
 
 // Program Options (Change to 0 to turn off)
-byte use_orientation = 0; // Will turn on and off i2c and orientation measurements
-byte use_displacement = 0; // Will turn on and off SPI and displacement measurements
+byte use_orientation = 1; // Will turn on and off i2c and orientation measurements
+byte use_displacement = 1; // Will turn on and off SPI and displacement measurements
 byte use_lasers = 1; // Will turn on CW laser measurements
 byte output_all = 1; // Will output all data even if off
 
@@ -134,8 +134,8 @@ char OutputMode = 0; // flag for changing raw vs integrative output
 int button_value;
 
 //Variables for laser controller
-int laser1_power = 1500;
-int laser2_power = 1900;
+int laser1_power = 0;
+int laser2_power = 1500;
 int num = 100;
 int laser_selection = 2; //0 1 2 or 3, see DAC_mux
 int LD1[200] = {}; //variable to store data at first frequency
