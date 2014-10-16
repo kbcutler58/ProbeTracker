@@ -119,7 +119,7 @@ for i=1:length(data_x)
     y_location_offset = corrected_path_offset(i,2);
 end
 
-rho = 1500;
+rho = 3000;
 % Angle offset integration
 for i=1:length(data_x)
     % Calculate rotation matrix 
@@ -155,9 +155,7 @@ newaxis = ([-10000 10000 -10000 10000]);
 
 % Plot x y angle corrected path with offset (11khz peak)
 figure;
-scatter(corrected_path_offset(:,1),corrected_path_offset(:,2),markerSize);
-% ,-peak_power(:,3)), 
-colorbar
+scatter(corrected_path_offset(:,1),corrected_path_offset(:,2),markerSize,-peak_power(:,3)), colorbar
 title('2D Path Angle Corrected Offset');
 % axis(newaxis); 
 axis equal
