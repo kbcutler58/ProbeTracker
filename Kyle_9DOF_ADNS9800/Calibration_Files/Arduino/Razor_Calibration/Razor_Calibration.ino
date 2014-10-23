@@ -2,7 +2,7 @@
 #include <avr/pgmspace.h>
 
 //definitions
-#define Output_Interval 50
+#define Output_Interval 10
 #define output_baud_rate 115200
 
 #define to_deg(x) (x * 57.2957795131)
@@ -41,7 +41,17 @@ void setup() {
 
 
 void loop() {
-
+ if (SerialUSB.available() > 1) {
+    if (SerialUSB.read() == 'r') {
+      for (int i = 0; i < 3; i++) {
+      accel_min[i] = 0;
+      accel_max[i] = 0; 
+      gyro_num_samples = 0;
+      gyro_average[i] = 0;
+      gyro[i] = 0;
+      }
+    }
+ }
   if (auto_start == 1)
   {
     switch(sensor_select)
@@ -57,9 +67,14 @@ void loop() {
       
       case 1:
         read_accel();
-        
+        for (int i = 0; i<3; i++){
+        if (accel[i] > accel_max[i]) accel_max[i] = accel[i];
+        if (accel[i] < accel_min[i]) accel_min[i] = accel[i];
+        }
         for (int i = 0; i<3; i++) {
-          SerialUSB.print(accel[i]);
+          SerialUSB.print(accel_max[i]);
+          SerialUSB.print("/");
+          SerialUSB.print(accel_min[i]);
           if (i < 2) SerialUSB.print(",");
           else SerialUSB.println();  
         }
@@ -67,8 +82,13 @@ void loop() {
         
       case 2:
         read_gyro();
+        for (int i = 0; i < 3; i++) gyro_average[i] += gyro[i];
+        gyro_num_samples++;
+        
         for (int i = 0; i<3; i++) {
           SerialUSB.print(gyro[i]);
+          SerialUSB.print("/");
+          SerialUSB.print(gyro_average[i] / (float) gyro_num_samples);
           if (i < 2) SerialUSB.print(",");
           else SerialUSB.println();  
         }
