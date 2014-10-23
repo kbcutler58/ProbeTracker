@@ -1,0 +1,50 @@
+How to calibrate
+Based on 
+https://github.com/ptrbrtz/razor-9dof-ahrs/wiki/Tutorial Written by Peter Bartz
+
+Accelerometer
+
+1. Open Razor_Calibration.ino
+2. Set sensor_select variable to = 1
+3. Upload to Arduino Due
+4. Open serial monitor
+5. Send "r" command to reset measurements
+6. Test each direction for min/max measurements due to gravity
+7. Set max/min calibration numbers for RazorIMU.ino
+
+Gyroscope
+
+1. Open Razor_Calibration.ino
+2. Set sensor_select variable to = 2
+3. Upload to Arduino Due
+4. Open serial monitor
+4. Send "r" command to reset measurements
+5. leave gyroscope still for 10-15 seconds
+6. Set average noise levels for gyro calibration numbers for RazorIMU.ino
+
+Compass
+
+1. Open Razor_Calibration.ino
+2. Set sensor_select variable to = 0
+3. Upload to Arduino Due
+4. Open serial monitor and check that data is being sent
+5. Close serial monitor
+
+6. Open Processing/magnet_text_gen/magnet_text_gen
+7. Check to make sure serialPort matches with input data
+8. Change data file name in "Rename logger = createWRiter("Data File.txt");
+9. Run processing script
+10. Move compass in all orientations to gather data from the compass
+11. Press "C" to stop data acquisition and write text file
+
+12. Open Matlab/magnet_calib.m
+13. Change folder in line 3 to folder containing file in step 8
+14. Change text file name to name of file in step 8
+15. Run file 
+16. Check plot to make sure there are enough points to fit
+17. Output A is [x,y,z] of center of ellipsoid
+18. Copy A into extended magnetometer calibration center of RazorIMU.ino
+19. Output D is 9 parameter ellipsoid fit
+20. Copy D into extended magnetometer 9 parameters transform of RazorIMU.ino
+
+Enjoy!
