@@ -28,12 +28,12 @@ Code segmented for options of
 #define ki_Yaw 0.00002f
 
 // Calibration values
-#define accel_x_min ((float) -250)
-#define accel_y_min ((float) -250)
-#define accel_z_min ((float) -250)
-#define accel_x_max ((float) 250)
-#define accel_y_max ((float) 250)
-#define accel_z_max ((float) 250)
+//#define accel_x_min ((float) -250)
+//#define accel_y_min ((float) -250)
+//#define accel_z_min ((float) -250)
+//#define accel_x_max ((float) 250)
+//#define accel_y_max ((float) 250)
+//#define accel_z_max ((float) 250)
 
 #define magnet_x_min ((float) -600)
 #define magnet_y_min ((float) -600)
@@ -42,18 +42,18 @@ Code segmented for options of
 #define magnet_y_max ((float) 600)
 #define magnet_z_max ((float) 600)
 
-//#define gyro_offset_x ((float) -10.45)
-//#define gyro_offset_y ((float) 59.60)
-//#define gyro_offset_z ((float) 4.99)
+#define gyro_offset_x ((float) -10.45)
+#define gyro_offset_y ((float) 59.60)
+#define gyro_offset_z ((float) 4.99)
 
 //
 //// Calibration values
-//#define accel_x_min ((float) -283)
-//#define accel_y_min ((float) -256)
-//#define accel_z_min ((float) -264)
-//#define accel_x_max ((float) 249)
-//#define accel_y_max ((float) 268)
-//#define accel_z_max ((float) 247)
+#define accel_x_min ((float) -283)
+#define accel_y_min ((float) -256)
+#define accel_z_min ((float) -264)
+#define accel_x_max ((float) 249)
+#define accel_y_max ((float) 268)
+#define accel_z_max ((float) 247)
 //
 //#define magnet_x_min ((float) -1393)
 //#define magnet_y_min ((float) -1308)
@@ -62,9 +62,9 @@ Code segmented for options of
 //#define magnet_y_max ((float) 1643)
 //#define magnet_z_max ((float) 4096)
 //
-#define gyro_offset_x ((float) 0)
-#define gyro_offset_y ((float) 0)
-#define gyro_offset_z ((float) 0)
+//#define gyro_offset_x ((float) 0)
+//#define gyro_offset_y ((float) 0)
+//#define gyro_offset_z ((float) 0)
 
 // Offset and scale calculations (for calibration)
 #define accel_x_off ((accel_x_min + accel_x_max) / 2.0f)
@@ -88,10 +88,10 @@ Code segmented for options of
 #define to_reg(x) (x * 0.01745329252)
 
 // Program Options (Change to 0 to turn off)
-byte use_orientation = 0; // Will turn on and off i2c and orientation measurements
+byte use_orientation = 1; // Will turn on and off i2c and orientation measurements
 byte use_displacement = 0; // Will turn on and off SPI and displacement measurements
-byte use_lasers = 1; // Will turn on CW laser measurements
-byte output_all = 1; // Will output all data even if off
+byte use_lasers = 0; // Will turn on CW laser measurements
+byte output_all = 0; // Will output all data even if off
 
 byte use_calibration = 0;
 
@@ -107,8 +107,8 @@ float yaw, pitch, roll = 0; // Euler Angles
 int curr_calibration_sensor = 0;
 
 // Extended Magnet Calibration
-//const float magnet_ellipsoid_center[3] = {-14.6, 104.0, 22.2};
-//const float magnet_ellipsoid_transform[3][3] = {{3.3335E-6, 3.5204E-6 , 4.1310E-6 }, {-1.1816E-8, -1.2134E-8, 3.6146E-8}, {5.0396E-5, -3.6931E-4, -9.5678E-5}};
+const float magnet_ellipsoid_center[3] = {-14.6, 104.0, 22.2};
+const float magnet_ellipsoid_transform[3][3] = {{3.3335E-6, 3.5204E-6 , 4.1310E-6 }, {-1.1816E-8, -1.2134E-8, 3.6146E-8}, {5.0396E-5, -3.6931E-4, -9.5678E-5}};
 
 
 // DCM Variables
