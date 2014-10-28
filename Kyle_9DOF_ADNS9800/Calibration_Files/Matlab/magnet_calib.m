@@ -15,3 +15,10 @@ axis equal
 % Output ellipsoid formula constants
 
 [a,b,c,d] = ellipsoid_fit(cal_data);
+%%
+close all
+hold on
+scatter3(x,y,z)
+[x1,y1,z1] = ellipsoid(a(1),a(2),a(3),b(1),b(2),b(3));
+surf(x1,y1,z1)
+view(3)
