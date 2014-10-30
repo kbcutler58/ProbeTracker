@@ -88,9 +88,8 @@ Code segmented for options of
 #define to_reg(x) (x * 0.01745329252)
 
 // Extended Magnet Calibration
-const float magnet_ellipsoid_center[3] = {-11.6, 101.4, 0.0110};
-const float magnet_ellipsoid_transform[3][3] = {{3.7620E-6, 3.3399E-6 , 4.4805E-6 }, {8.3889E-9, 5.3590E-8, -2.5917E-8}, {4.2881E-5, -3.3849E-4, 3.2010E-6}};
-
+const float magnet_ellipsoid_center[3] = {-25.62, 82.3669, 5.07015};
+const float magnet_ellipsoid_transform[3][3] = {{0.880149, 0.0115554, 0.0120998}, {0.0115554, 0.865412, 0.00954605}, {0.0120998, 0.00954605, 0.997919}};;
 
 // Program Options (Change to 0 to turn off)
 byte use_orientation = 1; // Will turn on and off i2c and orientation measurements
