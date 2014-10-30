@@ -36,13 +36,13 @@ void compensate_errors() {
   gyro[2] -= -gyro_offset_z;
     
   // Scale compass data
-  for (int i = 0; i < 3; i++) magnet_temp[i]=magnet[i] - magnet_ellipsoid_center[i];
-  Matrix_Vector_Multiply(magnet_ellipsoid_transform, magnet_temp, magnet);
-  
+//  for (int i = 0; i < 3; i++) magnet_temp[i]=magnet[i] - magnet_ellipsoid_center[i];
+//  Matrix_Vector_Multiply(magnet_ellipsoid_transform, magnet_temp, magnet);
+
    
-//  magnet[0] = (magnet[0] - magnet_x_off) * magnet_x_scale;
-//  magnet[1] = (magnet[1] - magnet_y_off) * magnet_y_scale;
-//  magnet[2] = (magnet[2] - magnet_z_off) * magnet_z_scale;
+  magnet[0] = (magnet[0] - magnet_x_off) * magnet_x_scale;
+  magnet[1] = (magnet[1] - magnet_y_off) * magnet_y_scale;
+  magnet[2] = (magnet[2] - magnet_z_off) * magnet_z_scale;
   
 }
 

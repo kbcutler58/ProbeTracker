@@ -35,25 +35,25 @@ Code segmented for options of
 //#define accel_y_max ((float) 250)
 //#define accel_z_max ((float) 250)
 
-#define magnet_x_min ((float) -600)
-#define magnet_y_min ((float) -600)
-#define magnet_z_min ((float) -600)
-#define magnet_x_max ((float) 600)
-#define magnet_y_max ((float) 600)
-#define magnet_z_max ((float) 600)
+#define magnet_x_min ((float) -464)
+#define magnet_y_min ((float) -466)
+#define magnet_z_min ((float) -472)
+#define magnet_x_max ((float) 485)
+#define magnet_y_max ((float) 634)
+#define magnet_z_max ((float) 472)
 
-#define gyro_offset_x ((float) -10.45)
-#define gyro_offset_y ((float) 59.60)
-#define gyro_offset_z ((float) 4.99)
+#define gyro_offset_x ((float) -9.75)
+#define gyro_offset_y ((float) 58.65)
+#define gyro_offset_z ((float) 4.02)
 
 //
 //// Calibration values
-#define accel_x_min ((float) -283)
-#define accel_y_min ((float) -256)
-#define accel_z_min ((float) -264)
-#define accel_x_max ((float) 249)
-#define accel_y_max ((float) 268)
-#define accel_z_max ((float) 247)
+#define accel_x_min ((float) -289)
+#define accel_y_min ((float) -264)
+#define accel_z_min ((float) -285)
+#define accel_x_max ((float) 256)
+#define accel_y_max ((float) 279)
+#define accel_z_max ((float) 266)
 //
 //#define magnet_x_min ((float) -1393)
 //#define magnet_y_min ((float) -1308)
@@ -87,9 +87,14 @@ Code segmented for options of
 #define to_deg(x) (x * 57.2957795131)
 #define to_reg(x) (x * 0.01745329252)
 
+// Extended Magnet Calibration
+const float magnet_ellipsoid_center[3] = {-11.6, 101.4, 0.0110};
+const float magnet_ellipsoid_transform[3][3] = {{3.7620E-6, 3.3399E-6 , 4.4805E-6 }, {8.3889E-9, 5.3590E-8, -2.5917E-8}, {4.2881E-5, -3.3849E-4, 3.2010E-6}};
+
+
 // Program Options (Change to 0 to turn off)
 byte use_orientation = 1; // Will turn on and off i2c and orientation measurements
-byte use_displacement = 0; // Will turn on and off SPI and displacement measurements
+byte use_displacement = 1; // Will turn on and off SPI and displacement measurements
 byte use_lasers = 0; // Will turn on CW laser measurements
 byte output_all = 0; // Will output all data even if off
 
@@ -105,11 +110,6 @@ float gyro[3], gyro_average[3]; //gyroscope variables
 int gyro_num_samples = 0;
 float yaw, pitch, roll = 0; // Euler Angles
 int curr_calibration_sensor = 0;
-
-// Extended Magnet Calibration
-const float magnet_ellipsoid_center[3] = {-14.6, 104.0, 22.2};
-const float magnet_ellipsoid_transform[3][3] = {{3.3335E-6, 3.5204E-6 , 4.1310E-6 }, {-1.1816E-8, -1.2134E-8, 3.6146E-8}, {5.0396E-5, -3.6931E-4, -9.5678E-5}};
-
 
 // DCM Variables
 float mag_heading; //compass heading
