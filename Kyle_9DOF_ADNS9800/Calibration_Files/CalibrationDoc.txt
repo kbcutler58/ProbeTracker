@@ -42,9 +42,8 @@ Compass
 14. Change text file name to name of file in step 8
 15. Run file 
 16. Check plot to make sure there are enough points to fit
-17. Output A is [x,y,z] of center of ellipsoid
-18. Copy A into extended magnetometer calibration center of RazorIMU.ino
-19. Output D is 9 parameter ellipsoid fit
-20. Copy D into extended magnetometer 9 parameters transform of RazorIMU.ino
+17a.To use extended calibration use the first two lines and copy them into RazorIMU.ino
+17b.To use regular calibration use the last six lines and copy them into RazorIMU.ino
+18. Make sure to mark whether regular or extended magnetic calibration is used in RazorIMU.ino
 
 Enjoy!
