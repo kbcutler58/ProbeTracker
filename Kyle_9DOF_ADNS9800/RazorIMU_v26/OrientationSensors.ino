@@ -138,7 +138,7 @@ void read_gyro()
   }
   else
   {
-    SerialUSB.println("Error reading gyro");
+    Serial.println("Error reading gyro");
   }
 }
 
@@ -168,7 +168,7 @@ void read_magnet()
   }
   else
   {
-    SerialUSB.println("Error Reading Magnetometer");
+    Serial.println("Error Reading Magnetometer");
   }
 }
 

@@ -70,7 +70,7 @@ void lasermouse_Init()
   SerialUSB.println(laser_ctrl0);
   write_Register(REG_LASER_CTRL0, laser_ctrl0 & 0xf0);
   delay(10);
-  //SerialUSB.print("ADNS9800 Initialized");
+  //Serial.print("ADNS9800 Initialized");
 }
 
 void read_lasermouse()
@@ -84,7 +84,7 @@ void read_lasermouse()
   y_high = read_Register(0x06);
   squal = read_Register(0x07);
   digitalWrite(SS_PIN, HIGH);
-//  SerialUSB.println("Read Complete");
+//  Serial.println("Read Complete");
   x_low = lasermouse_dataconvert(x_low);
   y_low = lasermouse_dataconvert(y_low);
 //  x_high = lasermouse_dataconvert(x_high);
