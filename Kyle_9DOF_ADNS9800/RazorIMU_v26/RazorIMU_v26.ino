@@ -89,8 +89,9 @@ Code segmented for options of
 
 // Program Options (Change to 0 to turn off)
 byte use_orientation = 1; // Will turn on and off i2c and orientation measurements
-byte use_displacement = 0; // Will turn on and off SPI and displacement measurements
+byte use_displacement = 1; // Will turn on and off SPI and displacement measurements
 byte use_lasers = 1; // Will turn on CW laser measurements
+byte output_lasers = 1;
 //byte output_all = 1; // Will output all data even if off
 byte use_calibration = 0;
 byte use_counter = 0;
@@ -109,7 +110,7 @@ int curr_calibration_sensor = 0;
 // Extended Magnet Calibration
 //const float magnet_ellipsoid_center[3] = {-14.6, 104.0, 22.2};
 //const float magnet_ellipsoid_transform[3][3] = {{3.3335E-6, 3.5204E-6 , 4.1310E-6 }, {-1.1816E-8, -1.2134E-8, 3.6146E-8}, {5.0396E-5, -3.6931E-4, -9.5678E-5}};
-
+char button_string[10];
 
 // DCM Variables
 float mag_heading; //compass heading
@@ -244,6 +245,7 @@ void loop() {
         read_accel();
         read_gyro();
         read_magnet();
+        update_button();
 
 
         if (use_calibration == 1)
@@ -265,6 +267,7 @@ void loop() {
         normalize_values(); // normalize DCM
         drift_correction(); // check and correct for drift
         convert_angles(); // from matrix to euler
+        if (isnan(to_deg(yaw))==1) reset_fusion();
       }
 
       if (use_displacement == 1) {
@@ -323,7 +326,7 @@ void loop() {
           //      LD1[i+num]=ADC->ADC_CDR[0];
         }
 
-        snprintf(tStr2, 1001, ",%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,", LD2[0], LD2[1], LD2[2], LD2[3], LD2[4], LD2[5], LD2[6], LD2[7], LD2[8], LD2[9], LD2[10], LD2[11], LD2[12], LD2[13], LD2[14], LD2[15], LD2[16], LD2[17], LD2[18], LD2[19], LD2[20], LD2[21], LD2[22], LD2[23], LD2[24], LD2[25], LD2[26], LD2[27], LD2[28], LD2[29], LD2[30], LD2[31], LD2[32], LD2[33], LD2[34], LD2[35], LD2[36], LD2[37], LD2[38], LD2[39], LD2[40], LD2[41], LD2[42], LD2[43], LD2[44], LD2[45], LD2[46], LD2[47], LD2[48], LD2[49], LD2[50], LD2[51], LD2[52], LD2[53], LD2[54], LD2[55], LD2[56], LD2[57], LD2[58], LD2[59], LD2[60], LD2[61], LD2[62], LD2[63], LD2[64], LD2[65], LD2[66], LD2[67], LD2[68], LD2[69], LD2[70], LD2[71], LD2[72], LD2[73], LD2[74], LD2[75], LD2[76], LD2[77], LD2[78], LD2[79], LD2[80], LD2[81], LD2[82], LD2[83], LD2[84], LD2[85], LD2[86], LD2[87], LD2[88], LD2[89], LD2[90], LD2[91], LD2[92], LD2[93], LD2[94], LD2[95], LD2[96], LD2[97], LD2[98], LD2[99], LD2[100], LD2[101], LD2[102], LD2[103], LD2[104], LD2[105], LD2[106], LD2[107], LD2[108], LD2[109], LD2[110], LD2[111], LD2[112], LD2[113], LD2[114], LD2[115], LD2[116], LD2[117], LD2[118], LD2[119], LD2[120], LD2[121], LD2[122], LD2[123], LD2[124], LD2[125], LD2[126], LD2[127], LD2[128], LD2[129], LD2[130], LD2[131], LD2[132], LD2[133], LD2[134], LD2[135], LD2[136], LD2[137], LD2[138], LD2[139], LD2[140], LD2[141], LD2[142], LD2[143], LD2[144], LD2[145], LD2[146], LD2[147], LD2[148], LD2[149], LD2[150], LD2[151], LD2[152], LD2[153], LD2[154], LD2[155], LD2[156], LD2[157], LD2[158], LD2[159], LD2[160], LD2[161], LD2[162], LD2[163], LD2[164], LD2[165], LD2[166], LD2[167], LD2[168], LD2[169], LD2[170], LD2[171], LD2[172], LD2[173], LD2[174], LD2[175], LD2[176], LD2[177], LD2[178], LD2[179], LD2[180], LD2[181], LD2[182], LD2[183], LD2[184], LD2[185], LD2[186], LD2[187], LD2[188], LD2[189], LD2[190], LD2[191], LD2[192], LD2[193], LD2[194], LD2[195], LD2[196], LD2[197], LD2[198], LD2[199]);
+        snprintf(tStr2, 1000, "%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d", LD2[0], LD2[1], LD2[2], LD2[3], LD2[4], LD2[5], LD2[6], LD2[7], LD2[8], LD2[9], LD2[10], LD2[11], LD2[12], LD2[13], LD2[14], LD2[15], LD2[16], LD2[17], LD2[18], LD2[19], LD2[20], LD2[21], LD2[22], LD2[23], LD2[24], LD2[25], LD2[26], LD2[27], LD2[28], LD2[29], LD2[30], LD2[31], LD2[32], LD2[33], LD2[34], LD2[35], LD2[36], LD2[37], LD2[38], LD2[39], LD2[40], LD2[41], LD2[42], LD2[43], LD2[44], LD2[45], LD2[46], LD2[47], LD2[48], LD2[49], LD2[50], LD2[51], LD2[52], LD2[53], LD2[54], LD2[55], LD2[56], LD2[57], LD2[58], LD2[59], LD2[60], LD2[61], LD2[62], LD2[63], LD2[64], LD2[65], LD2[66], LD2[67], LD2[68], LD2[69], LD2[70], LD2[71], LD2[72], LD2[73], LD2[74], LD2[75], LD2[76], LD2[77], LD2[78], LD2[79], LD2[80], LD2[81], LD2[82], LD2[83], LD2[84], LD2[85], LD2[86], LD2[87], LD2[88], LD2[89], LD2[90], LD2[91], LD2[92], LD2[93], LD2[94], LD2[95], LD2[96], LD2[97], LD2[98], LD2[99], LD2[100], LD2[101], LD2[102], LD2[103], LD2[104], LD2[105], LD2[106], LD2[107], LD2[108], LD2[109], LD2[110], LD2[111], LD2[112], LD2[113], LD2[114], LD2[115], LD2[116], LD2[117], LD2[118], LD2[119], LD2[120], LD2[121], LD2[122], LD2[123], LD2[124], LD2[125], LD2[126], LD2[127], LD2[128], LD2[129], LD2[130], LD2[131], LD2[132], LD2[133], LD2[134], LD2[135], LD2[136], LD2[137], LD2[138], LD2[139], LD2[140], LD2[141], LD2[142], LD2[143], LD2[144], LD2[145], LD2[146], LD2[147], LD2[148], LD2[149], LD2[150], LD2[151], LD2[152], LD2[153], LD2[154], LD2[155], LD2[156], LD2[157], LD2[158], LD2[159], LD2[160], LD2[161], LD2[162], LD2[163], LD2[164], LD2[165], LD2[166], LD2[167], LD2[168], LD2[169], LD2[170], LD2[171], LD2[172], LD2[173], LD2[174], LD2[175], LD2[176], LD2[177], LD2[178], LD2[179], LD2[180], LD2[181], LD2[182], LD2[183], LD2[184], LD2[185], LD2[186], LD2[187], LD2[188], LD2[189], LD2[190], LD2[191], LD2[192], LD2[193], LD2[194], LD2[195], LD2[196], LD2[197], LD2[198], LD2[199]);
         DAC_mux(1, low_power, low_power);
         DAC_mux(2, laser1_power, laser2_power);
         output_print2();
@@ -341,20 +344,21 @@ void loop() {
 //end of loop
 
 void output_print() {
-  snprintf(outputString, 100, "%09d,%09d,%09d,%+08.3f,%+08.3f,%+08.3f", millis(), x_real, y_real, to_deg(yaw), to_deg(pitch), to_deg(roll));
+  snprintf(outputString, 100, "%09d,%09d,%09d,%08.3f,%08.3f,%08.3f", millis(), x_real, y_real, to_deg(yaw), to_deg(pitch), to_deg(roll));
   SerialUSB.print(outputString);
-  SerialUSB.print(",");
-  SerialUSB.print(tStr);
-  SerialUSB.print(",");
+//  SerialUSB.print(",");
+//  SerialUSB.print(button_value);
+  if (output_lasers==1) {SerialUSB.print(tStr); SerialUSB.print(",");}
 }
 
 void output_print2() {
-  SerialUSB.print(tStr2);
+ if (output_lasers==1) SerialUSB.print(tStr2);
   SerialUSB.println();
 }
 
 void update_button() {
   button_value = analogRead(0);
+  snprintf(button_string, 4, "%04d", button_value);
 }
 
 void reset_function() {
