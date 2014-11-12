@@ -34,8 +34,7 @@ void compensate_errors() {
   gyro[0] -= -gyro_offset_x;
   gyro[1] -= -gyro_offset_y;
   gyro[2] -= -gyro_offset_z;
-  
-  
+    
   if (use_calibration == 1) {
   // Scale compass data
   for (int i = 0; i < 3; i++) {
