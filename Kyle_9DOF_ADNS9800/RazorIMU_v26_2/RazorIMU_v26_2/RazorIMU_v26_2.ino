@@ -18,7 +18,7 @@ Code segmented for options of
 #include <avr/pgmspace.h>
 
 //definitions
-#define Output_Interval 18
+#define Output_Interval 20
 #define output_baud_rate 115200
 
 #define gravity 256.0f
@@ -354,6 +354,8 @@ void output_print() {
   SerialUSB.print(outputString);
   SerialUSB.print(",");
   SerialUSB.print(button_string);
+//  SerialUSB.print(",");
+//  SerialUSB.print(x_low);
   if (output_lasers==1) {SerialUSB.print(tStr); 
 //SerialUSB.print(",");
                         }

@@ -156,7 +156,7 @@ byte read_Register(byte reg_addr)
   byte data = SPI.transfer(0);
   delayMicroseconds(1);
   digitalWrite(SS_PIN, HIGH);
-  delayMicroseconds(19);
+  delayMicroseconds(40);
   return data;
 }
 
@@ -176,5 +176,6 @@ void laser_on(void)
   digitalWrite(SS_PIN,HIGH);
 }
   
+
 
 
