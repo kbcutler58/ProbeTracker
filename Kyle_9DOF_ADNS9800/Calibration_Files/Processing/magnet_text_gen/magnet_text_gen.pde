@@ -17,13 +17,13 @@ void setup()
   println("available serial ports:");
   println(Serial.list());
   serial = new Serial(this, serialPort, 115200);
-  logger = createWriter("DataRecording_10degrees.txt");
+  logger = createWriter("DataRecording3_150mm_5.txt");
   delay(100);
 }
 
 void draw()
 {
-  if (serial.available() >= 59) {
+  if (serial.available() >= 61) {
     inputString = serial.readStringUntil('\n');
     if (inputString != null && inputString.length() > 0) {
       String [] inputStringArr = split(inputString, ",");
@@ -69,7 +69,7 @@ void draw()
 
 void keyPressed() {
   if (key =='c') {
-    delay(2000);
+    delay(500);
     logger.flush();
     logger.close();
     exit();

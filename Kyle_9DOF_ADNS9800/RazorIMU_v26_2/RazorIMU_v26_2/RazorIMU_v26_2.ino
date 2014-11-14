@@ -95,7 +95,7 @@ const float magnet_ellipsoid_transform[3][3] = {{0.849864, -0.0309965, -0.046295
 byte use_orientation = 1; // Will turn on and off i2c and orientation measurements
 byte use_displacement = 1; // Will turn on and off SPI and displacement measurements
 byte use_lasers = 1; // Will turn on CW laser measurements
-byte output_lasers = 1;
+byte output_lasers = 0;
 //byte output_all = 1; // Will output all data even if off
 byte use_calibration = 0;
 byte use_counter = 0;
@@ -353,7 +353,7 @@ void output_print() {
   snprintf(outputString, 100, "%09d,%09d,%09d,%08.3f,%08.3f,%08.3f", millis(), x_real, y_real, to_deg(yaw), to_deg(pitch), to_deg(roll));
   SerialUSB.print(outputString);
   SerialUSB.print(",");
-//  SerialUSB.print(button_value);
+  SerialUSB.print(button_string);
   if (output_lasers==1) {SerialUSB.print(tStr); 
 //SerialUSB.print(",");
                         }
@@ -366,7 +366,7 @@ void output_print2() {
 
 void update_button() {
   button_value = analogRead(0);
-  snprintf(button_string, 4, "%04d", button_value);
+  snprintf(button_string, 5, "%04d", button_value);
 }
 
 void reset_function() {
