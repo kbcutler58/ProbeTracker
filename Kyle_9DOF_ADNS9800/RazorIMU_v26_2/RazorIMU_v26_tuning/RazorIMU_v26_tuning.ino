@@ -41,6 +41,10 @@ Code segmented for options of
 #define kp_Yaw 2.4f
 #define ki_Yaw 0.00020f
 
+//// Tuning 5
+//#define kp_Yaw 1.0f
+//#define ki_Yaw 0.001f
+
 //// Original Settings
 //#define kp_Yaw 1.2f
 //#define ki_Yaw 0.00002f
@@ -262,14 +266,14 @@ void loop() {
       //          if ((use_orientation == 0) && (use_displacement == 0)) delayMicroseconds(1300);
       //          //         if ((use_orientation = 0) && (use_displacement == 0))
       //        }
-
+      update_button();
       if (use_orientation == 1)
       {
         //get tracking stuff
         read_accel();
         read_gyro();
         read_magnet();
-        update_button();
+//        update_button();
 
 
 //        if (use_calibration == 1)

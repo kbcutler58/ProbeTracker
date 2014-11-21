@@ -19,19 +19,7 @@ yaw(1:range(i),i) = data(:,4);
 button(1:range(i),i) = data(:,7);
 buttonMark(i) = find(button(:,i)>500,1);
 end
-%% Separate Data
-% 
 
-%tun2 x10 Ki_yaw need to redo 1:4
-
-
-% time = data(:,1)-data(1,1);
-% x_displacement= data(:,2);
-% y_displacement=data(:,3);
-% yaw = data(:,4);
-% pitch = data(:,5);
-% roll = data(:,6);
-% button = data(:,7);
 %%
  for i=1:5
     
@@ -52,10 +40,10 @@ plot(time(1:range(test),test),yaw(1:range(test),test),'LineWidth',5);%,yaw,time,
 scatter(time(buttonMark(test),test),yaw(buttonMark(test),test),500,'s');
 legend('Output','Start of rotation')
 
-h = gcf;
-saveas(h,strcat(title3,'.fig'))
-
-h = gcf;
-saveas(h,strcat(title3,'.jpeg'))
+% h = gcf;
+% saveas(h,strcat(title3,'.fig'))
+% 
+% h = gcf;
+% saveas(h,strcat(title3,'.jpeg'))
 
  end

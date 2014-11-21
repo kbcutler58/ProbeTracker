@@ -17,8 +17,8 @@ void setup()
   println("available serial ports:");
   println(Serial.list());
   serial = new Serial(this, serialPort, 115200);
-  logger = createWriter("OrientationData_raw5.txt");
-  delay(100);
+  logger = createWriter("OrientationNoise1.txt");
+  delay(2000);
 }
 
 void draw()

@@ -1,0 +1,39 @@
+For Delta of  50 mm 
+Mean displacement = -4067.60, Standard Dev = 48.916 
+Percent Error = 1.20258 
+For Delta of 100 mm 
+Mean displacement = -8358.00, Standard Dev = 129.698 
+Percent Error = 1.55178 
+For Delta of 150 mm 
+Mean displacement = -12265.60, Standard Dev = 133.118 
+Percent Error = 1.08529 
+For Delta of  50 mm 
+Mean displacement = -220.20, Standard Dev = 58.709 
+Percent Return Error = 1.47213 
+Percent Return Error = 1.43227 
+Percent Return Error = 1.40856 
+Percent Return Error = 1.45534 
+Percent Return Error = 1.45498 
+For Delta of 100 mm 
+Mean displacement = -338.40, Standard Dev = 148.123 
+Percent Return Error = 1.85223 
+Percent Return Error = 1.80395 
+Percent Return Error = 1.84738 
+Percent Return Error = 1.88715 
+Percent Return Error = 1.82036 
+For Delta of 150 mm 
+Mean displacement = -291.40, Standard Dev = 156.999 
+Percent Return Error = 1.31073 
+Percent Return Error = 1.33084 
+Percent Return Error = 1.29537 
+Percent Return Error = 1.32077 
+Percent Return Error = 1.33673 
+
+Skin Tests
+
+For Delta of  50 mm 
+Mean displacement = -3257.00, Standard Dev = 118.560 
+Percent Error = 3.64016 
+For Delta of 100 mm 
+Mean displacement = -6460.80, Standard Dev = 201.953 
+Percent Error = 3.12583 
