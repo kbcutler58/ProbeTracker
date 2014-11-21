@@ -1,3 +1,5 @@
+#include <LiquidCrystal.h>
+
 /*
  Embedded Motion Tracking for Arduino
  Based off Razor AHRS Firmware v1.4.2
@@ -134,7 +136,7 @@ char OutputMode = 0; // flag for changing raw vs integrative output
 int button_value;
 
 //Variables for laser controller
-int laser1_power = 0;
+int laser1_power = 1500;
 int laser2_power = 1500;
 int num = 100;
 int laser_selection = 2; //0 1 2 or 3, see DAC_mux
