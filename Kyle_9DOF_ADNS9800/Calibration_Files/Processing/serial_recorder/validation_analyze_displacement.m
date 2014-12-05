@@ -4,8 +4,8 @@ clc
 delta = 100;
 
 for i = 1:5
-    basename1 = 'DisplacementData_delta';
-    basename1 = 'DisplacementData_deltareturn';
+%     basename1 = 'DisplacementData_delta';
+%     basename1 = 'DisplacementData_deltareturn';
     basename1 = 'DisplacementData_deltarskin';
     basename2 = num2str(delta);
     basename3 = strcat('_',num2str(i));
@@ -43,11 +43,12 @@ percent_error = abs(STD/average_distance*100);
 % average_distance = mean(y_final);
 % STD = std(y_final);
 % percent_error = abs(STD/average_distance)*100;
-% % percent_error_return = abs(STD./min(y_int))*100;
+% percent_error_return = abs(STD./min(y_int))*100;
+% percent_error_return_mean = mean(percent_error_return);
 
 %% Print Statements
 fprintf(' For Delta of%4d mm \n',delta)
 fprintf(' Mean displacement = %05.2f, Standard Dev = %06.3f \n', [average_distance, STD])
 fprintf(' Percent Error = %.5f \n', percent_error)
-% fprintf(' Percent Return Error = %.5f \n', percent_error_return)
+% fprintf(' Percent Return Error = %.5f \n', percent_error_return_mean)
 
