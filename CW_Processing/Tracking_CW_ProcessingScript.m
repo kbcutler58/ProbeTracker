@@ -13,51 +13,71 @@ FFT_Resolution = 14;
 %% Load in Data
 
 %txt file output path
-pathName = 'C:\Users\Kyle\Downloads';
-outputFile = 'test_txt.txt';
+pathName = 'C:\Users\General\Documents\GitHub\BLI_ProbePathRender\executables\SignalProcessRecorder\output\';
+outputFile = 'xyzVerticesAndSignalData_2014_12_05__15_27_30.txt';
 
 cd(pathName) % path folder
 data = load(outputFile); % import data
 %% Specify Data Format
 
-label.time = 1;
-label.x = 2;
-label.y = 3;
-label.yaw = 4;
-label.pitch = 5;
-label.roll = 6;
-label.button = 7;
-label.squal = 8;
-% label.random = 9;
-label.waveform1 = 10:84;
-label.waveform2 = 85:159;
+% label.time = 1;
+% label.x = 2;
+% label.y = 3;
+% label.yaw = 4;
+% label.pitch = 5;
+% label.roll = 6;
+% label.button = 7;
+% label.squal = 8;
+% % label.random = 9;
+% label.waveform1 = 10:84;
+% label.waveform2 = 85:159;
 
-data_time = data(:,label.time);
+label.x = 1;
+label.y = 2;
+label.z = 3;
+label.waveform1 = 4:103;
+label.waveform2 = 104:203;
+label.waveform3 = 204:303;
+label.waveform4 = 304:403;
+
 data_x = data(:,label.x);
 data_y = data(:,label.y);
-data_yaw = deg2rad(data(:,label.yaw));
-data_pitch = deg2rad(data(:,label.pitch));
-data_roll = deg2rad(data(:,label.roll));
-data_squal = data(:,label.squal);
+data_z = data(:,label.z);
+
+% data_yaw = deg2rad(data(:,label.yaw));
+% data_pitch = deg2rad(data(:,label.pitch));
+% data_roll = deg2rad(data(:,label.roll));
+% data_squal = data(:,label.squal);
 % data_random = data(:,label.random);
-data_button = data(:,label.button);
+% data_button = data(:,label.button);
 data_waveform1 = data(:,label.waveform1);
 data_waveform2 = data(:,label.waveform2);
+data_waveform3 = data(:,label.waveform3);
+data_waveform4 = data(:,label.waveform4);
 
 clear data outputFile pathName label
 %% Find Peak Power in Waveforms
-
+cd 'C:\Users\General\Documents\GitHub\ProbeTracker\CW_Processing'
 peak_power = zeros(size(data_waveform1,1),4);
 
 for i=1:size(data_waveform1,1)
    [peak_power(i,1),peak_power(i,2)]=CWFFT3_Commented(data_waveform1(i,:),FFT_Resolution);
    [peak_power(i,3),peak_power(i,4)]=CWFFT3_Commented(data_waveform2(i,:),FFT_Resolution);
+   [peak_power(i,5),peak_power(i,6)]=CWFFT3_Commented(data_waveform3(i,:),FFT_Resolution);
+   [peak_power(i,7),peak_power(i,8)]=CWFFT3_Commented(data_waveform4(i,:),FFT_Resolution);
 end
 
 % data = data3; % renaming probe output
 % peaks = peaks3; % renaming fft output
 % colordata = [peaks(:,1),peaks(:,3)]; % fft data to color output
+%%
+% scatter(data_x,data_y,100,peak_power(:,1))
+scatter(data_x,data_y,100,peak_power(:,3))
+% scatter(data_x,data_y,100,peak_power(:,5))
+% scatter(data_x,data_y,100,peak_power(:,7))
+colorbar
 
+%{
 %% Plot raw x,y path with color
 
 % peak_power(:,1) = 20k peak
@@ -188,3 +208,4 @@ axis equal
 % legend('original path','corrected path')
 % % axis(newaxis); 
 % axis equal
+%}

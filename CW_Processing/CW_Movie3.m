@@ -5,18 +5,19 @@
     Output [ Video ]
 %}
 %% Load Test Data
-clear
-clc
+% clear
+% clc
 close all
 
-data1 = load('cw_fit_abs_optical_props.mat');
-data2 = load('xy path.mat');
-X_Position = data2.xy(:,1);
-Y_Position = data2.xy(:,2);
-opticalData = data1.mua_cwtracker4;
-clear data1 data2
+% data1 = load('cw_fit_abs_optical_props.mat');
+% data2 = load('xy path.mat');
+X_Position = data_x;
+Y_Position = data_y;
+opticalData = peak_power(:,[1 3 5 7]);
+% data1.mua_cwtracker4;
+% clear data1 data2
 % Which Column of properties/power to plot
-DataSelection = 1;
+DataSelection = 3;
 
 %% Specify Video Information
 % Video Name
@@ -33,7 +34,7 @@ plotMarkerSize = 100;
 % round(length(data_time)/time_range);
 
 % Set Frame rate to 30fps
-frame_rate = 30;
+frame_rate = 50;
 
 %% Create VideoWriter
 videoName = strcat(videoName,'.avi');
