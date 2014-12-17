@@ -5,7 +5,7 @@ import processing.serial.*;
 PrintWriter logger;
 
 Serial serial;
-final String serialPort = "COM12";
+final String serialPort = "COM5";
 
 String inputString;
 String magx,magy,magz;
@@ -35,6 +35,7 @@ void draw()
         pitch = inputStringArr[4];
         roll = inputStringArr[5];
         button = inputStringArr[6];
+        
         
 //        magx = inputStringArr[0];
 //        magy = inputStringArr[1];
