@@ -96,15 +96,15 @@ const float magnet_ellipsoid_transform[3][3] = {{0.849864, -0.0309965, -0.046295
 #define to_reg(x) (x * 0.01745329252)
 
 // Program Options (Change to 0 to turn off)
-byte use_orientation = 1; // Will turn on and off i2c and orientation measurements
-byte use_displacement = 1; // Will turn on and off SPI and displacement measurements
+byte use_orientation = 0; // Will turn on and off i2c and orientation measurements
+byte use_displacement = 0; // Will turn on and off SPI and displacement measurements
 byte use_lasers = 1; // Will turn on CW laser measurements
 byte output_lasers = 1;
 //byte output_all = 1; // Will output all data even if off
 byte use_calibration = 0;
 byte use_counter = 0;
 int counter = 0;
-byte serial_control = 0; // Set to 1 if using CVI to call each measurement
+byte serial_control = 1; // Set to 1 if using CVI to call each measurement
 byte start_flag = 1; // controls auto starting 1:autostart 0:send 'a' to start
 
 // Orientation Sensor variables
@@ -164,6 +164,7 @@ int B = 7;
 int MUX_EN = 3;
 int  t1 = 0;
 int  t2 = 0;
+int  t3,t4,t5;
 char outputString[100];
 
 
@@ -295,38 +296,40 @@ void loop() {
         t2 = micros();
         //output data from optical signals
 
-        for (int i = 0; i < num; i++)
-        {
-          while ((ADC->ADC_ISR & 0x80) == 0); // wait for conversion 1channel
-          //       while((ADC->ADC_ISR & 0x81)!=0x81); // 2channel
-          LD1[i] = (ADC->ADC_CDR[7]);   // read data
-          delayMicroseconds(1);
-          //      LD1[i+num]=ADC->ADC_CDR[0];
-        }
-        delayMicroseconds(1);
-        //
 //        for (int i = 0; i < num; i++)
 //        {
-//          while ((ADC->ADC_ISR & 0x01) == 0); // wait for conversion 1channel
+//          while ((ADC->ADC_ISR & 0x80) == 0); // wait for conversion 1channel
 //          //       while((ADC->ADC_ISR & 0x81)!=0x81); // 2channel
-//          LD1[i + num] = (ADC->ADC_CDR[0]); // read data
+//          LD1[i] = (ADC->ADC_CDR[7]);   // read data
 //          delayMicroseconds(1);
 //          //      LD1[i+num]=ADC->ADC_CDR[0];
 //        }
+//        delayMicroseconds(1);
+//        //
+        
+        
+        for (int i = 0; i < num; i++)
+        {
+          while ((ADC->ADC_ISR & 0x01) == 0); // wait for conversion 1channel
+          //       while((ADC->ADC_ISR & 0x81)!=0x81); // 2channel
+          LD1[i] = (ADC->ADC_CDR[0]); // read data
+          delayMicroseconds(1);
+          //      LD1[i+num]=ADC->ADC_CDR[0];
+        }
 
         //Convert LD and LD2 to strings (for speed - can't send array all at once)
         //    snprintf(tStr,501,"%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,",LD[0],LD[1],LD[2],LD[3],LD[4],LD[5],LD[6],LD[7],LD[8],LD[9], LD[10], LD[11],LD[12],LD[13],LD[14],LD[15],LD[16],LD[17],LD[18],LD[19], LD[20], LD[21],LD[22],LD[23],LD[24],LD[25],LD[26],LD[27],LD[28],LD[29], LD[30], LD[31],LD[32],LD[33],LD[34],LD[35],LD[36],LD[37],LD[38],LD[39], LD[40], LD[41],LD[42],LD[43],LD[44],LD[45],LD[46],LD[47],LD[48],LD[49], LD[50], LD[51],LD[52],LD[53],LD[54],LD[55],LD[56],LD[57],LD[58],LD[59], LD[60], LD[61],LD[62],LD[63],LD[64],LD[65],LD[66],LD[67],LD[68],LD[69], LD[70], LD[71],LD[72],LD[73],LD[74],LD[75],LD[76],LD[77],LD[78],LD[79], LD[80], LD[81],LD[82],LD[83],LD[84],LD[85],LD[86],LD[87],LD[88],LD[89], LD[90], LD[91],LD[92],LD[93],LD[94],LD[95],LD[96],LD[97],LD[98],LD[99]);
  //       snprintf(tStr, 1001, "%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,", LD1[0], LD1[1], LD1[2], LD1[3], LD1[4], LD1[5], LD1[6], LD1[7], LD1[8], LD1[9], LD1[10], LD1[11], LD1[12], LD1[13], LD1[14], LD1[15], LD1[16], LD1[17], LD1[18], LD1[19], LD1[20], LD1[21], LD1[22], LD1[23], LD1[24], LD1[25], LD1[26], LD1[27], LD1[28], LD1[29], LD1[30], LD1[31], LD1[32], LD1[33], LD1[34], LD1[35], LD1[36], LD1[37], LD1[38], LD1[39], LD1[40], LD1[41], LD1[42], LD1[43], LD1[44], LD1[45], LD1[46], LD1[47], LD1[48], LD1[49], LD1[50], LD1[51], LD1[52], LD1[53], LD1[54], LD1[55], LD1[56], LD1[57], LD1[58], LD1[59], LD1[60], LD1[61], LD1[62], LD1[63], LD1[64], LD1[65], LD1[66], LD1[67], LD1[68], LD1[69], LD1[70], LD1[71], LD1[72], LD1[73], LD1[74], LD1[75], LD1[76], LD1[77], LD1[78], LD1[79], LD1[80], LD1[81], LD1[82], LD1[83], LD1[84], LD1[85], LD1[86], LD1[87], LD1[88], LD1[89], LD1[90], LD1[91], LD1[92], LD1[93], LD1[94], LD1[95], LD1[96], LD1[97], LD1[98], LD1[99], LD1[100], LD1[101], LD1[102], LD1[103], LD1[104], LD1[105], LD1[106], LD1[107], LD1[108], LD1[109], LD1[110], LD1[111], LD1[112], LD1[113], LD1[114], LD1[115], LD1[116], LD1[117], LD1[118], LD1[119], LD1[120], LD1[121], LD1[122], LD1[123], LD1[124], LD1[125], LD1[126], LD1[127], LD1[128], LD1[129], LD1[130], LD1[131], LD1[132], LD1[133], LD1[134], LD1[135], LD1[136], LD1[137], LD1[138], LD1[139], LD1[140], LD1[141], LD1[142], LD1[143], LD1[144], LD1[145], LD1[146], LD1[147], LD1[148], LD1[149], LD1[150], LD1[151], LD1[152], LD1[153], LD1[154], LD1[155], LD1[156], LD1[157], LD1[158], LD1[159], LD1[160], LD1[161], LD1[162], LD1[163], LD1[164], LD1[165], LD1[166], LD1[167], LD1[168], LD1[169], LD1[170], LD1[171], LD1[172], LD1[173], LD1[174], LD1[175], LD1[176], LD1[177], LD1[178], LD1[179], LD1[180], LD1[181], LD1[182], LD1[183], LD1[184], LD1[185], LD1[186], LD1[187], LD1[188], LD1[189], LD1[190], LD1[191], LD1[192], LD1[193], LD1[194], LD1[195], LD1[196], LD1[197], LD1[198], LD1[199]);
 
-//        arm_status status;
-//        arm_cfft_radix4_instance_f32 S;
-//        float32_t maxValue;
-//        status = ARM_MATH_SUCCESS;
-//        status = arm_cfft_radix4_init_f32(&S, fftSize, ifftFlag, doBitReverse);
-//        arm_cfft_radix4_f32(&S, LD1);
-//        arm_cmplx_mag_f32(LD1, testOutput, fftSize);
-//        arm_max_f32(testOutput, fftSize, &maxValue, &testIndex);
-//        SerialUSB.println(testIndex,DEC);
+        arm_status status;
+        arm_cfft_radix4_instance_f32 S;
+        float32_t maxValue;
+        status = ARM_MATH_SUCCESS;
+        status = arm_cfft_radix4_init_f32(&S, fftSize, ifftFlag, doBitReverse);
+        arm_cfft_radix4_f32(&S, LD1);
+        arm_cmplx_mag_f32(LD1, testOutput, fftSize);
+        arm_max_f32(testOutput, fftSize, &maxValue, &testIndex);
+        SerialUSB.println(testIndex,DEC);
 
         delay(5);
         DAC_mux(2, low_power, low_power);
