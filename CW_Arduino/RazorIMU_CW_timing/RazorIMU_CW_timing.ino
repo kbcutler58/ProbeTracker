@@ -356,11 +356,11 @@ void loop() {
         SerialUSB.print(t2 - t1);
         SerialUSB.println(" ");
 
+        t1 = micros();
         arm_status status;
         arm_cfft_radix4_instance_q15 S;
         int16_t maxValue;
         status = ARM_MATH_SUCCESS;
-        t1 = micros();
         status = arm_cfft_radix4_init_q15(&S, fftSize, ifftFlag, doBitReverse);
         t2 = micros();
         arm_cfft_radix4_q15(&S, LD1);
@@ -374,7 +374,7 @@ void loop() {
         SerialUSB.print("Original Time: ");
         SerialUSB.print(t1);
         SerialUSB.print(",");
-        SerialUSB.print("FFT Init Time: ");
+        SerialUSB.print("FFT Init/Status Time: ");
         SerialUSB.print(t2-t1);
         SerialUSB.print(",");
         SerialUSB.print("FFT Time: ");
