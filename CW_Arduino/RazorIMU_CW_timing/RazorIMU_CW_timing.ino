@@ -13,6 +13,21 @@ Code segmented for options of
   Force print of all variables
 */
 
+
+
+// FFT Variables and Definitions
+#define ARM_MATH_CM3
+#include <arm_math.h>
+
+#define TEST_LENGTH_SAMPLES 512
+static int16_t testOutput[TEST_LENGTH_SAMPLES/2];
+uint32_t fftSize = TEST_LENGTH_SAMPLES/2;
+uint32_t ifftFlag = 0;
+uint32_t doBitReverse = 1;
+uint32_t testIndex = 0;
+int t3,t4,t5;
+
+
 #include <Wire.h> //Orientation Comm Protocol
 #include <SPI.h> //Displacement Comm Protocol
 #include <avr/pgmspace.h>
@@ -67,7 +82,7 @@ Code segmented for options of
 //#define gyro_offset_z ((float) -31.42)
 
 const float magnet_ellipsoid_center[3] = {11.7298, 43.4296, 39.7083};
-const float magnet_ellipsoid_transform[3][3] = {{0.849864, -0.0309965, -0.0462958}, {-0.0309965, 0.893829, -0.0144364}, {-0.0462958, -0.0144364, 0.985486}};
+const float magnet_ellipsoid_transform[3][3] = {{0.849864, -0.0309965, -0.0462958}, { -0.0309965, 0.893829, -0.0144364}, { -0.0462958, -0.0144364, 0.985486}};
 
 
 // Offset and scale calculations (for calibration)
@@ -115,7 +130,6 @@ int curr_calibration_sensor = 0;
 //const float magnet_ellipsoid_center[3] = {-14.6, 104.0, 22.2};
 //const float magnet_ellipsoid_transform[3][3] = {{3.3335E-6, 3.5204E-6 , 4.1310E-6 }, {-1.1816E-8, -1.2134E-8, 3.6146E-8}, {5.0396E-5, -3.6931E-4, -9.5678E-5}};
 
-
 char button_string[10];
 
 // DCM Variables
@@ -151,8 +165,11 @@ int num = 100;
 
 //int laser_selection = 2; //0 1 2 or 3, see DAC_mux
 
-int LD1[200] = {}; //variable to store data at first frequency
-int LD2[200] = {};
+
+int16_t LD1[200] = {}; //variable to store data at first frequency
+int16_t LD2[200] = {};
+//int LD1[200] = {};
+//int LD2[200] = {};
 char tStr[1010]; //string to output data at first frequency
 char tStr2[1010];
 int A = 6; //first pin for choosing which diode to send RF modulation to
@@ -254,17 +271,17 @@ void loop() {
         update_button();
 
 
-//        if (use_calibration == 1)
-//        {
-//          read_accel();
-//          read_gyro();
-//          read_magnet();
-//          for (int i = 0; i < 3; i++) {
-//            output_calibration(curr_calibration_sensor);
-//            curr_calibration_sensor++;
-//          }
-//          curr_calibration_sensor = 0;
-//        }
+        //        if (use_calibration == 1)
+        //        {
+        //          read_accel();
+        //          read_gyro();
+        //          read_magnet();
+        //          for (int i = 0; i < 3; i++) {
+        //            output_calibration(curr_calibration_sensor);
+        //            curr_calibration_sensor++;
+        //          }
+        //          curr_calibration_sensor = 0;
+        //        }
 
         //do tracking math
         compensate_errors(); //scale and offset
@@ -273,7 +290,7 @@ void loop() {
         normalize_values(); // normalize DCM
         drift_correction(); // check and correct for drift
         convert_angles(); // from matrix to euler
-        if (isnan(to_deg(yaw))==1) reset_fusion();
+        if (isnan(to_deg(yaw)) == 1) reset_fusion();
       }
 
       if (use_displacement == 1) {
@@ -305,20 +322,20 @@ void loop() {
         t2 = micros();
         SerialUSB.println("");
         SerialUSB.print("Read Time 1 in usec: ");
-        SerialUSB.print(t2-t1);
+        SerialUSB.print(t2 - t1);
         SerialUSB.println(" ");
-        
+
         //Convert LD and LD2 to strings (for speed - can't send array all at once)
         //    snprintf(tStr,501,"%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,",LD[0],LD[1],LD[2],LD[3],LD[4],LD[5],LD[6],LD[7],LD[8],LD[9], LD[10], LD[11],LD[12],LD[13],LD[14],LD[15],LD[16],LD[17],LD[18],LD[19], LD[20], LD[21],LD[22],LD[23],LD[24],LD[25],LD[26],LD[27],LD[28],LD[29], LD[30], LD[31],LD[32],LD[33],LD[34],LD[35],LD[36],LD[37],LD[38],LD[39], LD[40], LD[41],LD[42],LD[43],LD[44],LD[45],LD[46],LD[47],LD[48],LD[49], LD[50], LD[51],LD[52],LD[53],LD[54],LD[55],LD[56],LD[57],LD[58],LD[59], LD[60], LD[61],LD[62],LD[63],LD[64],LD[65],LD[66],LD[67],LD[68],LD[69], LD[70], LD[71],LD[72],LD[73],LD[74],LD[75],LD[76],LD[77],LD[78],LD[79], LD[80], LD[81],LD[82],LD[83],LD[84],LD[85],LD[86],LD[87],LD[88],LD[89], LD[90], LD[91],LD[92],LD[93],LD[94],LD[95],LD[96],LD[97],LD[98],LD[99]);
         t1 = micros();
         snprintf(tStr, 1001, "%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,", LD1[0], LD1[1], LD1[2], LD1[3], LD1[4], LD1[5], LD1[6], LD1[7], LD1[8], LD1[9], LD1[10], LD1[11], LD1[12], LD1[13], LD1[14], LD1[15], LD1[16], LD1[17], LD1[18], LD1[19], LD1[20], LD1[21], LD1[22], LD1[23], LD1[24], LD1[25], LD1[26], LD1[27], LD1[28], LD1[29], LD1[30], LD1[31], LD1[32], LD1[33], LD1[34], LD1[35], LD1[36], LD1[37], LD1[38], LD1[39], LD1[40], LD1[41], LD1[42], LD1[43], LD1[44], LD1[45], LD1[46], LD1[47], LD1[48], LD1[49], LD1[50], LD1[51], LD1[52], LD1[53], LD1[54], LD1[55], LD1[56], LD1[57], LD1[58], LD1[59], LD1[60], LD1[61], LD1[62], LD1[63], LD1[64], LD1[65], LD1[66], LD1[67], LD1[68], LD1[69], LD1[70], LD1[71], LD1[72], LD1[73], LD1[74], LD1[75], LD1[76], LD1[77], LD1[78], LD1[79], LD1[80], LD1[81], LD1[82], LD1[83], LD1[84], LD1[85], LD1[86], LD1[87], LD1[88], LD1[89], LD1[90], LD1[91], LD1[92], LD1[93], LD1[94], LD1[95], LD1[96], LD1[97], LD1[98], LD1[99], LD1[100], LD1[101], LD1[102], LD1[103], LD1[104], LD1[105], LD1[106], LD1[107], LD1[108], LD1[109], LD1[110], LD1[111], LD1[112], LD1[113], LD1[114], LD1[115], LD1[116], LD1[117], LD1[118], LD1[119], LD1[120], LD1[121], LD1[122], LD1[123], LD1[124], LD1[125], LD1[126], LD1[127], LD1[128], LD1[129], LD1[130], LD1[131], LD1[132], LD1[133], LD1[134], LD1[135], LD1[136], LD1[137], LD1[138], LD1[139], LD1[140], LD1[141], LD1[142], LD1[143], LD1[144], LD1[145], LD1[146], LD1[147], LD1[148], LD1[149], LD1[150], LD1[151], LD1[152], LD1[153], LD1[154], LD1[155], LD1[156], LD1[157], LD1[158], LD1[159], LD1[160], LD1[161], LD1[162], LD1[163], LD1[164], LD1[165], LD1[166], LD1[167], LD1[168], LD1[169], LD1[170], LD1[171], LD1[172], LD1[173], LD1[174], LD1[175], LD1[176], LD1[177], LD1[178], LD1[179], LD1[180], LD1[181], LD1[182], LD1[183], LD1[184], LD1[185], LD1[186], LD1[187], LD1[188], LD1[189], LD1[190], LD1[191], LD1[192], LD1[193], LD1[194], LD1[195], LD1[196], LD1[197], LD1[198], LD1[199]);
         t2 = micros();
-        
+
         SerialUSB.println("");
         SerialUSB.print("Formatting Time 1 in usec: ");
-        SerialUSB.print(t2-t1);
+        SerialUSB.print(t2 - t1);
         SerialUSB.println(" ");
-        
+
         t1 = micros();
         DAC_mux(2, low_power, low_power);
         DAC_mux(1, laser1_power, laser2_power);
@@ -326,18 +343,54 @@ void loop() {
 
         SerialUSB.println("");
         SerialUSB.print("DAC_Mux 1 in usec: ");
-        SerialUSB.print(t2-t1);
-        SerialUSB.println(" ");        
-        
+        SerialUSB.print(t2 - t1);
+        SerialUSB.println(" ");
+
         //output all except last two strings
         t1 = micros();
         output_print();
         t2 = micros();
-        
+
         SerialUSB.println("");
         SerialUSB.print("Transfer 1 in usec: ");
-        SerialUSB.print(t2-t1);
+        SerialUSB.print(t2 - t1);
         SerialUSB.println(" ");
+
+        arm_status status;
+        arm_cfft_radix4_instance_q15 S;
+        int16_t maxValue;
+        status = ARM_MATH_SUCCESS;
+        t1 = micros();
+        status = arm_cfft_radix4_init_q15(&S, fftSize, ifftFlag, doBitReverse);
+        t2 = micros();
+        arm_cfft_radix4_q15(&S, LD1);
+        t3 = micros();
+        arm_cmplx_mag_q15(LD1, testOutput, fftSize);
+        t4 = micros();
+        arm_max_q15(testOutput, fftSize, &maxValue, &testIndex);
+        t5 = micros();
+        
+        SerialUSB.println("");
+        SerialUSB.print("Original Time: ");
+        SerialUSB.print(t1);
+        SerialUSB.print(",");
+        SerialUSB.print("FFT Init Time: ");
+        SerialUSB.print(t2-t1);
+        SerialUSB.print(",");
+        SerialUSB.print("FFT Time: ");
+        SerialUSB.print(t3-t2);
+        SerialUSB.print(",");
+        SerialUSB.print("Magn Calculation Time: ");
+        SerialUSB.print(t4-t3);
+        SerialUSB.print(",");
+        SerialUSB.print("Max Output Calc Time: ");
+        SerialUSB.print(t5-t4);
+        SerialUSB.print(",");
+        SerialUSB.print("Index with Max Power: ");
+        SerialUSB.print(testIndex,DEC);
+        SerialUSB.print("Max Value: ");
+        SerialUSB.print(maxValue,DEC);
+        SerialUSB.println("");
         
         t1 = micros();
         for (int i = 0; i < num; i++)
@@ -359,40 +412,41 @@ void loop() {
           //      LD1[i+num]=ADC->ADC_CDR[0];
         }
         t2 = micros();
-        
+
         SerialUSB.println("");
         SerialUSB.print("Read Time 2 in usec: ");
-        SerialUSB.print(t2-t1);
+        SerialUSB.print(t2 - t1);
         SerialUSB.println(" ");
-        
+
         t1 = micros();
         snprintf(tStr2, 1000, "%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d,%4d", LD2[0], LD2[1], LD2[2], LD2[3], LD2[4], LD2[5], LD2[6], LD2[7], LD2[8], LD2[9], LD2[10], LD2[11], LD2[12], LD2[13], LD2[14], LD2[15], LD2[16], LD2[17], LD2[18], LD2[19], LD2[20], LD2[21], LD2[22], LD2[23], LD2[24], LD2[25], LD2[26], LD2[27], LD2[28], LD2[29], LD2[30], LD2[31], LD2[32], LD2[33], LD2[34], LD2[35], LD2[36], LD2[37], LD2[38], LD2[39], LD2[40], LD2[41], LD2[42], LD2[43], LD2[44], LD2[45], LD2[46], LD2[47], LD2[48], LD2[49], LD2[50], LD2[51], LD2[52], LD2[53], LD2[54], LD2[55], LD2[56], LD2[57], LD2[58], LD2[59], LD2[60], LD2[61], LD2[62], LD2[63], LD2[64], LD2[65], LD2[66], LD2[67], LD2[68], LD2[69], LD2[70], LD2[71], LD2[72], LD2[73], LD2[74], LD2[75], LD2[76], LD2[77], LD2[78], LD2[79], LD2[80], LD2[81], LD2[82], LD2[83], LD2[84], LD2[85], LD2[86], LD2[87], LD2[88], LD2[89], LD2[90], LD2[91], LD2[92], LD2[93], LD2[94], LD2[95], LD2[96], LD2[97], LD2[98], LD2[99], LD2[100], LD2[101], LD2[102], LD2[103], LD2[104], LD2[105], LD2[106], LD2[107], LD2[108], LD2[109], LD2[110], LD2[111], LD2[112], LD2[113], LD2[114], LD2[115], LD2[116], LD2[117], LD2[118], LD2[119], LD2[120], LD2[121], LD2[122], LD2[123], LD2[124], LD2[125], LD2[126], LD2[127], LD2[128], LD2[129], LD2[130], LD2[131], LD2[132], LD2[133], LD2[134], LD2[135], LD2[136], LD2[137], LD2[138], LD2[139], LD2[140], LD2[141], LD2[142], LD2[143], LD2[144], LD2[145], LD2[146], LD2[147], LD2[148], LD2[149], LD2[150], LD2[151], LD2[152], LD2[153], LD2[154], LD2[155], LD2[156], LD2[157], LD2[158], LD2[159], LD2[160], LD2[161], LD2[162], LD2[163], LD2[164], LD2[165], LD2[166], LD2[167], LD2[168], LD2[169], LD2[170], LD2[171], LD2[172], LD2[173], LD2[174], LD2[175], LD2[176], LD2[177], LD2[178], LD2[179], LD2[180], LD2[181], LD2[182], LD2[183], LD2[184], LD2[185], LD2[186], LD2[187], LD2[188], LD2[189], LD2[190], LD2[191], LD2[192], LD2[193], LD2[194], LD2[195], LD2[196], LD2[197], LD2[198], LD2[199]);
         t2 = micros();
-        
+
         SerialUSB.println("");
         SerialUSB.print("Formatting Time 2 in usec: ");
-        SerialUSB.print(t2-t1);
+        SerialUSB.print(t2 - t1);
         SerialUSB.println(" ");
-        
+
         t1 = micros();
         DAC_mux(1, low_power, low_power);
         DAC_mux(2, laser1_power, laser2_power);
         t2 = micros();
-        
+
         SerialUSB.println("");
         SerialUSB.print("DAC_Mux 2 in usec: ");
-        SerialUSB.print(t2-t1);
+        SerialUSB.print(t2 - t1);
         SerialUSB.println(" ");
-        
+
         t1 = micros();
         output_print2();
         t2 = micros();
-        
+
         SerialUSB.println("");
         SerialUSB.print("Transfer 2 in usec: ");
-        SerialUSB.print(t2-t1);
+        SerialUSB.print(t2 - t1);
         SerialUSB.println(" ");
         counter = 1;
+
 
         if (serial_control == 1) start_flag = 0;
       }
@@ -410,15 +464,16 @@ void output_print() {
   SerialUSB.print(outputString);
   SerialUSB.print(",");
   SerialUSB.print(button_string);
-//  SerialUSB.print(",");
-//  SerialUSB.print(x_low);
-  if (output_lasers==1) {SerialUSB.print(tStr); 
-//SerialUSB.print(",");
-                        }
+  //  SerialUSB.print(",");
+  //  SerialUSB.print(x_low);
+  if (output_lasers == 1) {
+    SerialUSB.print(tStr);
+    //SerialUSB.print(",");
+  }
 }
 
 void output_print2() {
- if (output_lasers==1) SerialUSB.print(tStr2);
+  if (output_lasers == 1) SerialUSB.print(tStr2);
   SerialUSB.println();
 }
 
