@@ -327,7 +327,8 @@ void loop() {
 //        arm_cmplx_mag_f32(LD1, testOutput, fftSize);
 //        arm_max_f32(testOutput, fftSize, &maxValue, &testIndex);
 //        SerialUSB.println(testIndex,DEC);
-        
+
+        delay(5);
         DAC_mux(2, low_power, low_power);
         DAC_mux(1, laser1_power, laser2_power);
 
